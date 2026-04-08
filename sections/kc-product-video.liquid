@@ -1,0 +1,230 @@
+{%- liquid
+  assign demo_video = product.metafields.custom.demo_video_url
+-%}
+<div id="shopify-section-{{ section.id }}" class="kc-video">
+  <div class="kc-vid__inner">
+    {%- if section.settings.vid_eyebrow != blank -%}
+      <p class="kc-vid__eyebrow">{{ section.settings.vid_eyebrow }}</p>
+    {%- endif -%}
+    <h2 class="kc-vid__title">
+      {{ section.settings.vid_title }}
+      {%- if section.settings.vid_title_em != blank -%}
+        <em>{{ section.settings.vid_title_em }}</em>
+      {%- endif -%}
+    </h2>
+    <div class="kc-vid__grid">
+      {%- if demo_video != blank -%}
+        <div class="kc-vid__card">
+          <div class="kc-vid__thumb-wrap" data-video-url="{{ demo_video }}">
+            <div class="kc-vid__thumb-bg">
+              <button class="kc-vid__play-btn" aria-label="Play video" type="button">▶</button>
+            </div>
+          </div>
+          <div class="kc-vid__card-info">
+            <span class="kc-vid__card-name">{{ section.settings.vid_name }}</span>
+            {%- if section.settings.vid_city != blank -%}
+              <span class="kc-vid__card-city">{{ section.settings.vid_city }}</span>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+      {%- for block in section.blocks -%}
+        {%- assign has_video = false -%}
+        {%- if block.settings.video_url != blank or block.settings.embed_code != blank -%}
+          {%- assign has_video = true -%}
+        {%- endif -%}
+        {%- if has_video -%}
+          <div class="kc-vid__card" {{ block.shopify_attributes }}>
+            <div class="kc-vid__thumb-wrap" data-video-url="{{ block.settings.video_url }}" data-embed="{{ block.settings.embed_code | escape }}">
+              {%- if block.settings.thumb_image != blank -%}
+                <img class="kc-vid__thumb-img" src="{{ block.settings.thumb_image | image_url: width: 480 }}" alt="{{ block.settings.name | escape }}" loading="lazy" width="480" height="480">
+              {%- else -%}
+                {%- assign yt_id = '' -%}
+                {%- assign yt_parts = block.settings.video_url | split: 'embed/' -%}
+                {%- if yt_parts.size > 1 -%}
+                  {%- assign yt_id = yt_parts[1] | split: '?' | first -%}
+                {%- endif -%}
+                {%- if yt_id != '' -%}
+                  <img class="kc-vid__thumb-img" src="https://img.youtube.com/vi/{{ yt_id }}/hqdefault.jpg" alt="{{ block.settings.name | escape }}" loading="lazy" width="480" height="360">
+                {%- else -%}
+                  <div class="kc-vid__thumb-bg"></div>
+                {%- endif -%}
+              {%- endif -%}
+              <button class="kc-vid__play-btn" aria-label="Play video" type="button">▶</button>
+            </div>
+            <div class="kc-vid__card-info">
+              <span class="kc-vid__card-name">{{ block.settings.name }}</span>
+              {%- if block.settings.city != blank -%}
+                <span class="kc-vid__card-city">{{ block.settings.city }}</span>
+              {%- endif -%}
+              {%- if block.settings.quote != blank -%}
+                <p class="kc-vid__card-quote">"{{ block.settings.quote }}"</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-video {
+    padding: 32px 16px;
+    background: {{ section.settings.video_section_bg }};
+    font-family: '{{ section.settings.body_font }}', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__inner { max-width: 900px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .kc-vid__eyebrow {
+    font-size: 12px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .08em; color: {{ section.settings.video_em_color }};
+    margin-bottom: 6px; text-align: center;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__title {
+    font-size: 22px; font-weight: 900; color: #FFFFFF;
+    text-align: center; margin-bottom: 24px; line-height: 1.3;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__title em {
+    color: {{ section.settings.video_em_color }}; font-style: normal;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__card {
+    background: rgba(255,255,255,.07);
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.12);
+  }
+  #shopify-section-{{ section.id }} .kc-vid__thumb-wrap {
+    position: relative;
+    aspect-ratio: 9/16;
+    background: #1A1828;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__thumb-bg {
+    width: 100%; height: 100%; background: #2a2838;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__thumb-img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: opacity 0.3s;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__play-btn {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 52px; height: 52px; border-radius: 50%;
+    background: rgba(255,255,255,.9); border: none;
+    font-size: 18px; color: #1A1828; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, background 0.2s; z-index: 2;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__play-btn:hover { transform: translate(-50%,-50%) scale(1.1); background: #fff; }
+  #shopify-section-{{ section.id }} .kc-vid__thumb-wrap iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__card-info {
+    padding: 10px 12px 14px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__card-name {
+    font-weight: 800; font-size: 13px; color: #FFFFFF;
+  }
+  #shopify-section-{{ section.id }} .kc-vid__card-city {
+    font-size: 11px; color: rgba(255,255,255,.55);
+  }
+  #shopify-section-{{ section.id }} .kc-vid__card-quote {
+    font-size: 12px; font-style: italic; color: rgba(255,255,255,.7);
+    margin-top: 4px; line-height: 1.4;
+  }
+  @media (min-width: 500px) {
+    #shopify-section-{{ section.id }} .kc-vid__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-video { padding: 40px 32px; }
+    #shopify-section-{{ section.id }} .kc-vid__title { font-size: 28px; }
+  }
+</style>
+
+<script>
+(function() {
+  var section = document.getElementById('shopify-section-{{ section.id }}');
+  if (!section) return;
+  section.querySelectorAll('.kc-vid__thumb-wrap').forEach(function(wrap) {
+    wrap.addEventListener('click', function() {
+      var url = wrap.getAttribute('data-video-url');
+      var embed = wrap.getAttribute('data-embed');
+      if (!url && !embed) return;
+      var iframe = document.createElement('iframe');
+      if (embed && embed.length > 10) {
+        var tmp = document.createElement('div');
+        tmp.innerHTML = embed;
+        var ifrEl = tmp.querySelector('iframe');
+        if (ifrEl) {
+          ifrEl.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+          wrap.innerHTML = '';
+          wrap.appendChild(ifrEl);
+          return;
+        }
+      }
+      if (url) {
+        var sep = url.indexOf('?') >= 0 ? '&' : '?';
+        iframe.src = url + sep + 'autoplay=1&mute=1&rel=0';
+        iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('allow', 'autoplay; encrypted-media');
+        wrap.innerHTML = '';
+        wrap.appendChild(iframe);
+      }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "KC — Product Video",
+  "settings": [
+    { "type": "text", "id": "vid_eyebrow", "label": "Eyebrow text", "default": "Real parents. Real reviews." },
+    { "type": "text", "id": "vid_title", "label": "Section title", "default": "See it in" },
+    { "type": "text", "id": "vid_title_em", "label": "Title highlight (italic)", "default": "action" },
+    { "type": "color", "id": "video_section_bg", "label": "Background", "default": "#1A1828" },
+    { "type": "color", "id": "video_em_color", "label": "Highlight colour", "default": "#E8C14A" },
+    { "type": "text", "id": "vid_name", "label": "Default video — name", "default": "Priya R." },
+    { "type": "text", "id": "vid_city", "label": "Default video — city", "default": "Mumbai" },
+    { "type": "color", "id": "brand_color", "label": "Brand colour", "default": "#6B5FD4" },
+    { "type": "range", "id": "border_radius", "label": "Card radius", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 12 },
+    {
+      "type": "select", "id": "body_font", "label": "Font",
+      "options": [
+        { "value": "Nunito", "label": "Nunito" },
+        { "value": "Poppins", "label": "Poppins" },
+        { "value": "Inter", "label": "Inter" },
+        { "value": "DM Sans", "label": "DM Sans" },
+        { "value": "Raleway", "label": "Raleway" }
+      ],
+      "default": "Nunito"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "video_card",
+      "name": "Video Card",
+      "settings": [
+        { "type": "text", "id": "video_url", "label": "YouTube embed URL", "default": "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+        { "type": "textarea", "id": "embed_code", "label": "Embed code (optional, overrides URL)" },
+        { "type": "image_picker", "id": "thumb_image", "label": "Thumbnail image (optional)" },
+        { "type": "text", "id": "name", "label": "Reviewer name", "default": "Parent" },
+        { "type": "text", "id": "city", "label": "City", "default": "India" },
+        { "type": "text", "id": "quote", "label": "Quote", "default": "Amazing product!" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KC \u2014 Product Video"
+    }
+  ]
+}
+{% endschema %}
