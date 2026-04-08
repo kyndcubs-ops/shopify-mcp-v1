@@ -1,7 +1,7 @@
 {%- liquid
   assign wa_num = section.settings.wa_number
-  assign wa_msg = 'Check out this product: ' | append: product.title
-  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg | url_encode
+  assign wa_msg = 'Check out this product: ' | append: product.title | url_encode
+  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg
 -%}
 <div id="shopify-section-{{ section.id }}" class="kcp-gallery">
   <div class="kcp-gallery__main-wrap">
