@@ -1,0 +1,100 @@
+<div id="shopify-section-{{ section.id }}" class="kc-age-nav">
+  <div class="kc-age-nav__inner">
+    {%- for block in section.blocks -%}
+      <a href="{{ block.settings.url }}" class="kc-age-nav__pill" {{ block.shopify_attributes }}>
+        {{ block.settings.label }}
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-age-nav {
+    background-color: #F0EDFF;
+    padding: 12px 0;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .kc-age-nav__inner {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 4px 16px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+  }
+  #shopify-section-{{ section.id }} .kc-age-nav__inner::-webkit-scrollbar {
+    display: none;
+  }
+  #shopify-section-{{ section.id }} .kc-age-nav__pill {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 20px;
+    border-radius: 99px;
+    background-color: #FFFFFF;
+    border: 2px solid #DDD8FF;
+    color: #6B5FD4;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s;
+    scroll-snap-align: start;
+  }
+  #shopify-section-{{ section.id }} .kc-age-nav__pill:hover {
+    background-color: #6B5FD4;
+    color: #FFFFFF;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-age-nav__inner {
+      justify-content: center;
+      flex-wrap: wrap;
+      overflow-x: visible;
+      padding: 4px 40px;
+    }
+    #shopify-section-{{ section.id }} .kc-age-nav__pill {
+      font-size: 15px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Age Navigation",
+  "blocks": [
+    {
+      "type": "nav_item",
+      "name": "Age Nav Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "1–2 yr"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Collection URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Age Navigation",
+      "blocks": [
+        { "type": "nav_item", "settings": { "label": "1–2 yr" } },
+        { "type": "nav_item", "settings": { "label": "2–4 yr" } },
+        { "type": "nav_item", "settings": { "label": "4–6 yr" } },
+        { "type": "nav_item", "settings": { "label": "6–8 yr" } },
+        { "type": "nav_item", "settings": { "label": "Travel" } },
+        { "type": "nav_item", "settings": { "label": "Gifting" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

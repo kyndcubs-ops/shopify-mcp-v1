@@ -1,0 +1,90 @@
+{%- liquid
+  assign msg1 = section.settings.message_1
+  assign msg2 = section.settings.message_2
+  assign msg3 = section.settings.message_3
+-%}
+<div id="shopify-section-{{ section.id }}" class="kc-announcement-bar">
+  <div class="kc-ann-track">
+    <span class="kc-ann-msg kc-ann-msg--active">{{ msg1 }}</span>
+    <span class="kc-ann-msg">{{ msg2 }}</span>
+    <span class="kc-ann-msg">{{ msg3 }}</span>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-announcement-bar {
+    background-color: #2C2A3A;
+    color: #E8C14A;
+    text-align: center;
+    padding: 10px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    position: relative;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .kc-ann-track {
+    position: relative;
+    height: 20px;
+  }
+  #shopify-section-{{ section.id }} .kc-ann-msg {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  #shopify-section-{{ section.id }} .kc-ann-msg--active {
+    opacity: 1;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-announcement-bar {
+      font-size: 14px;
+    }
+  }
+</style>
+
+<script>
+(function() {
+  var msgs = document.querySelectorAll('#shopify-section-{{ section.id }} .kc-ann-msg');
+  if (!msgs.length) return;
+  var idx = 0;
+  setInterval(function() {
+    msgs[idx].classList.remove('kc-ann-msg--active');
+    idx = (idx + 1) % msgs.length;
+    msgs[idx].classList.add('kc-ann-msg--active');
+  }, 3000);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "message_1",
+      "label": "Message 1",
+      "default": "🚚 Free delivery on orders above ₹499"
+    },
+    {
+      "type": "text",
+      "id": "message_2",
+      "label": "Message 2",
+      "default": "💵 Cash on delivery available pan-India"
+    },
+    {
+      "type": "text",
+      "id": "message_3",
+      "label": "Message 3",
+      "default": "↩️ Easy 7-day returns — no questions asked"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Bar"
+    }
+  ]
+}
+{% endschema %}
