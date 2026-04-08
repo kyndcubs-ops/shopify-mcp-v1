@@ -1161,6 +1161,7 @@ def _generate_theme(
             },
             "product-info": {
                 "type": "kcp-product-info-v4",
+                # hook_1 … hook_8 are rotating review quotes shown on the PDP
                 "settings": {
                     **{f"hook_{i+1}": hook for i, hook in enumerate(product_hooks)},
                 },
@@ -1181,8 +1182,8 @@ def _generate_theme(
                 "type": "kcp-product-tabs-v4",
                 "settings": {},
             },
-            "why-parents": {
-                "type": "kcp-why-parents-v4",
+            "why-choose-us": {
+                "type": "kcp-why-parents-v4",  # re-used section; key is niche-agnostic
                 "settings": {},
             },
             "reviews": {
@@ -1213,7 +1214,7 @@ def _generate_theme(
             "offers",
             "video-grid",
             "product-tabs",
-            "why-parents",
+            "why-choose-us",
             "reviews",
             "faq",
             "policy-grid",
