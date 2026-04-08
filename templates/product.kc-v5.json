@@ -1,0 +1,66 @@
+{
+  "sections": {
+    "kc-main": {
+      "type": "kc-product-main",
+      "blocks": {}
+    },
+    "kc-video": {
+      "type": "kc-product-video",
+      "blocks": {}
+    },
+    "kc-tabs": {
+      "type": "kc-product-tabs",
+      "blocks": {
+        "b1": { "type": "why_bullet", "settings": { "text": "Personally tested by our team before listing" } },
+        "b2": { "type": "why_bullet", "settings": { "text": "Meets EN71 international toy safety standards" } },
+        "b3": { "type": "why_bullet", "settings": { "text": "Non-toxic and BPA-free throughout" } },
+        "b4": { "type": "why_bullet", "settings": { "text": "Holds a child's attention for 10+ days" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4"]
+    },
+    "kc-why": {
+      "type": "kc-product-why",
+      "blocks": {
+        "card1": { "type": "why_card", "settings": { "emoji": "🧠", "title": "Builds real skills", "desc": "STEM learning through play" } },
+        "card2": { "type": "why_card", "settings": { "emoji": "🌿", "title": "100% safe", "desc": "Non-toxic, BPA-free, EN71 certified" } },
+        "card3": { "type": "why_card", "settings": { "emoji": "⏰", "title": "Hours of play", "desc": "Kids stay engaged 45+ min" } },
+        "card4": { "type": "why_card", "settings": { "emoji": "🎁", "title": "Perfect gift", "desc": "Premium box, ready to gift" } }
+      },
+      "block_order": ["card1", "card2", "card3", "card4"]
+    },
+    "kc-reviews": {
+      "type": "kc-product-reviews"
+    },
+    "kc-faq": {
+      "type": "kc-product-faq",
+      "blocks": {
+        "faq1": { "type": "faq_item", "settings": { "question": "Is this safe for my child?", "answer": "Yes. All Kynd Cubs products are non-toxic with smooth edges. Tested to EN71 international safety standards." } },
+        "faq2": { "type": "faq_item", "settings": { "question": "Will my child actually play with it?", "answer": "We only list products that pass our 10-day use test with real Indian families." } },
+        "faq3": { "type": "faq_item", "settings": { "question": "What if my child does not like it?", "answer": "Easy 7-day returns on unused products. WhatsApp us — no questions asked." } },
+        "faq4": { "type": "faq_item", "settings": { "question": "How fast will it arrive?", "answer": "2–3 business days pan-India. COD available. Tracking via WhatsApp." } },
+        "faq5": { "type": "faq_item", "settings": { "question": "Is this a good gift?", "answer": "All our products make excellent gifts. WhatsApp us and we will help pick the right one." } }
+      },
+      "block_order": ["faq1", "faq2", "faq3", "faq4", "faq5"]
+    },
+    "kc-policy": {
+      "type": "kc-product-policy"
+    },
+    "kc-sticky": {
+      "type": "kc-product-sticky"
+    },
+    "kc-wa-float": {
+      "type": "kc-product-wa-float"
+    }
+  },
+  "order": [
+    "kc-main",
+    "kc-video",
+    "kc-tabs",
+    "kc-why",
+    "kc-reviews",
+    "kc-faq",
+    "kc-policy",
+    "kc-sticky",
+    "kc-wa-float"
+  ]
+}

@@ -1,0 +1,222 @@
+{%- liquid
+  assign wa_num = section.settings.whatsapp_number
+  assign wa_msg = 'Hi! I have a question about ' | append: product.title | url_encode
+  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg
+-%}
+<div id="shopify-section-{{ section.id }}" class="kc-faq-section">
+  <div class="kc-faq__inner">
+    <h2 class="kc-faq__title">{{ section.settings.faq_section_title }}</h2>
+    <div class="kc-faq__list" id="kcFaqList-{{ section.id }}">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'faq_item' -%}
+            <div class="kc-faq__item{% if forloop.first %} kc-faq__item--open{% endif %}" {{ block.shopify_attributes }}>
+              <button class="kc-faq__question" type="button" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+                <span>{{ block.settings.question }}</span>
+                <span class="kc-faq__icon">{% if forloop.first %}×{% else %}+{% endif %}</span>
+              </button>
+              <div class="kc-faq__answer" {% unless forloop.first %}hidden{% endunless %}>
+                <div class="kc-faq__answer-inner">{{ block.settings.answer }}</div>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        <div class="kc-faq__item kc-faq__item--open">
+          <button class="kc-faq__question" type="button" aria-expanded="true">
+            <span>Is this safe for my child?</span>
+            <span class="kc-faq__icon">×</span>
+          </button>
+          <div class="kc-faq__answer">
+            <div class="kc-faq__answer-inner">Yes. All Kynd Cubs products are non-toxic with smooth edges. Tested to EN71 international safety standards.</div>
+          </div>
+        </div>
+        <div class="kc-faq__item">
+          <button class="kc-faq__question" type="button" aria-expanded="false">
+            <span>Will my child actually play with it?</span>
+            <span class="kc-faq__icon">+</span>
+          </button>
+          <div class="kc-faq__answer" hidden>
+            <div class="kc-faq__answer-inner">We only list products that pass our 10-day use test with real Indian families.</div>
+          </div>
+        </div>
+        <div class="kc-faq__item">
+          <button class="kc-faq__question" type="button" aria-expanded="false">
+            <span>What if my child does not like it?</span>
+            <span class="kc-faq__icon">+</span>
+          </button>
+          <div class="kc-faq__answer" hidden>
+            <div class="kc-faq__answer-inner">Easy 7-day returns on unused products. WhatsApp us — no questions asked.</div>
+          </div>
+        </div>
+        <div class="kc-faq__item">
+          <button class="kc-faq__question" type="button" aria-expanded="false">
+            <span>How fast will it arrive?</span>
+            <span class="kc-faq__icon">+</span>
+          </button>
+          <div class="kc-faq__answer" hidden>
+            <div class="kc-faq__answer-inner">2–3 business days pan-India. COD available. Tracking via WhatsApp.</div>
+          </div>
+        </div>
+        <div class="kc-faq__item">
+          <button class="kc-faq__question" type="button" aria-expanded="false">
+            <span>Is this a good gift?</span>
+            <span class="kc-faq__icon">+</span>
+          </button>
+          <div class="kc-faq__answer" hidden>
+            <div class="kc-faq__answer-inner">All our products make excellent gifts. WhatsApp us and we will help pick the right one.</div>
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="kc-faq__wa-bar" style="background:{{ section.settings.ship_bg }};">
+      <div class="kc-faq__wa-text-wrap">
+        <p class="kc-faq__wa-label">{{ section.settings.wa_label }}</p>
+        <p class="kc-faq__wa-sublabel">{{ section.settings.wa_sublabel }}</p>
+      </div>
+      <a href="{{ wa_link }}" target="_blank" rel="noopener" class="kc-faq__wa-btn" aria-label="Chat on WhatsApp"
+        style="background:{{ section.settings.wa_color }};">
+        💬
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-faq-section {
+    padding: 28px 16px;
+    background: {{ section.settings.bg_color }};
+    font-family: '{{ section.settings.body_font }}', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__inner { max-width: 900px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .kc-faq__title {
+    font-size: 22px; font-weight: 900; color: {{ section.settings.text_color }};
+    margin-bottom: 18px;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__list { display: flex; flex-direction: column; }
+  #shopify-section-{{ section.id }} .kc-faq__item { border-bottom: 1.5px solid #EDE8E0; }
+  #shopify-section-{{ section.id }} .kc-faq__question {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; background: none; border: none;
+    padding: 14px 4px; font-family: '{{ section.settings.body_font }}', sans-serif;
+    font-weight: 800; font-size: 14px; color: {{ section.settings.text_color }};
+    cursor: pointer; text-align: left; gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__icon {
+    font-size: 20px; font-weight: 400; color: {{ section.settings.brand_color }};
+    flex-shrink: 0; line-height: 1; transition: transform 0.25s;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__item--open .kc-faq__icon { transform: rotate(45deg); }
+  #shopify-section-{{ section.id }} .kc-faq__answer { overflow: hidden; }
+  #shopify-section-{{ section.id }} .kc-faq__answer[hidden] { display: none; }
+  #shopify-section-{{ section.id }} .kc-faq__answer-inner {
+    padding: 4px 4px 14px; font-size: 14px;
+    color: {{ section.settings.muted_color }}; line-height: 1.6; font-weight: 400;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__wa-bar {
+    margin-top: 24px; border-radius: 14px;
+    padding: 14px 16px; display: flex; align-items: center;
+    justify-content: space-between; gap: 16px;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__wa-text-wrap { flex: 1; }
+  #shopify-section-{{ section.id }} .kc-faq__wa-label {
+    font-size: 14px; font-weight: 800; color: {{ section.settings.text_color }}; margin-bottom: 2px;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__wa-sublabel {
+    font-size: 12px; color: {{ section.settings.muted_color }}; font-weight: 700;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__wa-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; text-decoration: none; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(37,211,102,.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #shopify-section-{{ section.id }} .kc-faq__wa-btn:hover { transform: scale(1.08); box-shadow: 0 4px 14px rgba(37,211,102,.4); }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-faq-section { padding: 32px; }
+    #shopify-section-{{ section.id }} .kc-faq__question { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kc-faq__answer-inner { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kc-faq__title { font-size: 26px; }
+  }
+</style>
+
+<script>
+(function() {
+  var section = document.getElementById('shopify-section-{{ section.id }}');
+  if (!section) return;
+  var items = section.querySelectorAll('.kc-faq__item');
+  items.forEach(function(item) {
+    var btn = item.querySelector('.kc-faq__question');
+    var answer = item.querySelector('.kc-faq__answer');
+    var icon = item.querySelector('.kc-faq__icon');
+    if (!btn || !answer) return;
+    btn.addEventListener('click', function() {
+      var isOpen = item.classList.contains('kc-faq__item--open');
+      items.forEach(function(i) {
+        i.classList.remove('kc-faq__item--open');
+        var a = i.querySelector('.kc-faq__answer');
+        var ic = i.querySelector('.kc-faq__icon');
+        var b = i.querySelector('.kc-faq__question');
+        if (a) a.setAttribute('hidden', '');
+        if (ic) ic.textContent = '+';
+        if (b) b.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('kc-faq__item--open');
+        answer.removeAttribute('hidden');
+        if (icon) icon.textContent = '×';
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "KC — Product FAQ",
+  "settings": [
+    { "type": "text", "id": "faq_section_title", "label": "Section title", "default": "Frequently asked questions" },
+    { "type": "text", "id": "wa_label", "label": "WhatsApp label", "default": "Still have questions?" },
+    { "type": "text", "id": "wa_sublabel", "label": "WhatsApp sub-label", "default": "We reply in minutes." },
+    { "type": "color", "id": "brand_color", "label": "Brand colour", "default": "#6B5FD4" },
+    { "type": "color", "id": "brand_color_lt", "label": "Brand light", "default": "#F0EDFF" },
+    { "type": "color", "id": "text_color", "label": "Text colour", "default": "#2C2A3A" },
+    { "type": "color", "id": "muted_color", "label": "Muted colour", "default": "#7A7890" },
+    { "type": "color", "id": "success_color", "label": "Success colour", "default": "#4A7C6F" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#FBF8F4" },
+    { "type": "color", "id": "ship_bg", "label": "WhatsApp bar background", "default": "#E8F4F0" },
+    { "type": "color", "id": "wa_color", "label": "WhatsApp button colour", "default": "#25D366" },
+    { "type": "range", "id": "border_radius", "label": "Radius", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 12 },
+    {
+      "type": "select", "id": "body_font", "label": "Font",
+      "options": [
+        { "value": "Nunito", "label": "Nunito" },
+        { "value": "Poppins", "label": "Poppins" },
+        { "value": "Inter", "label": "Inter" },
+        { "value": "DM Sans", "label": "DM Sans" },
+        { "value": "Raleway", "label": "Raleway" }
+      ],
+      "default": "Nunito"
+    },
+    { "type": "text", "id": "whatsapp_number", "label": "WhatsApp number", "default": "917509802310" }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Is this safe for my child?" },
+        { "type": "textarea", "id": "answer", "label": "Answer", "default": "Yes. All Kynd Cubs products are non-toxic with smooth edges. Tested to EN71 international safety standards." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KC \u2014 Product FAQ"
+    }
+  ]
+}
+{% endschema %}

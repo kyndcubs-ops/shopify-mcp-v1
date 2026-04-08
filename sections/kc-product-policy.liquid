@@ -1,0 +1,103 @@
+<div id="shopify-section-{{ section.id }}" class="kc-policy-section">
+  <div class="kc-pol__inner">
+    <div class="kc-pol__grid">
+      <div class="kc-pol__card">
+        <span class="kc-pol__icon">{{ section.settings.pol1_icon }}</span>
+        <p class="kc-pol__title">{{ section.settings.pol1_title }}</p>
+        <p class="kc-pol__sub">{{ section.settings.pol1_sub }}</p>
+      </div>
+      <div class="kc-pol__card">
+        <span class="kc-pol__icon">{{ section.settings.pol2_icon }}</span>
+        <p class="kc-pol__title">{{ section.settings.pol2_title }}</p>
+        <p class="kc-pol__sub">{{ section.settings.pol2_sub }}</p>
+      </div>
+      <div class="kc-pol__card">
+        <span class="kc-pol__icon">{{ section.settings.pol3_icon }}</span>
+        <p class="kc-pol__title">{{ section.settings.pol3_title }}</p>
+        <p class="kc-pol__sub">{{ section.settings.pol3_sub }}</p>
+      </div>
+      <div class="kc-pol__card">
+        <span class="kc-pol__icon">{{ section.settings.pol4_icon }}</span>
+        <p class="kc-pol__title">{{ section.settings.pol4_title }}</p>
+        <p class="kc-pol__sub">{{ section.settings.pol4_sub }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-policy-section {
+    padding: 28px 16px 80px;
+    background: {{ section.settings.bg_color }};
+    font-family: '{{ section.settings.body_font }}', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kc-pol__inner { max-width: 900px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .kc-pol__grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .kc-pol__card {
+    background: {{ section.settings.policy_card_bg }};
+    border-radius: {{ section.settings.border_radius }}px;
+    padding: 16px 14px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    border: 1.5px solid rgba(0,0,0,.06);
+  }
+  #shopify-section-{{ section.id }} .kc-pol__icon { font-size: 30px; line-height: 1; }
+  #shopify-section-{{ section.id }} .kc-pol__title {
+    font-size: 13px; font-weight: 900; color: {{ section.settings.text_color }}; margin: 0;
+  }
+  #shopify-section-{{ section.id }} .kc-pol__sub {
+    font-size: 11px; color: {{ section.settings.muted_color }}; font-weight: 700; margin: 0;
+    line-height: 1.4;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-policy-section { padding: 36px 32px 80px; }
+    #shopify-section-{{ section.id }} .kc-pol__grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    #shopify-section-{{ section.id }} .kc-pol__title { font-size: 14px; }
+    #shopify-section-{{ section.id }} .kc-pol__sub { font-size: 12px; }
+  }
+  @media (min-width: 900px) {
+    #shopify-section-{{ section.id }} .kc-policy-section { padding-bottom: 40px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "KC — Product Policy",
+  "settings": [
+    { "type": "text", "id": "pol1_icon", "label": "Card 1 icon", "default": "↩️" },
+    { "type": "text", "id": "pol1_title", "label": "Card 1 title", "default": "7-day returns" },
+    { "type": "text", "id": "pol1_sub", "label": "Card 1 subtitle", "default": "No questions asked" },
+    { "type": "text", "id": "pol2_icon", "label": "Card 2 icon", "default": "🛡️" },
+    { "type": "text", "id": "pol2_title", "label": "Card 2 title", "default": "Safety tested" },
+    { "type": "text", "id": "pol2_sub", "label": "Card 2 subtitle", "default": "EN71 + BPA-free" },
+    { "type": "text", "id": "pol3_icon", "label": "Card 3 icon", "default": "💵" },
+    { "type": "text", "id": "pol3_title", "label": "Card 3 title", "default": "COD available" },
+    { "type": "text", "id": "pol3_sub", "label": "Card 3 subtitle", "default": "Pay on delivery" },
+    { "type": "text", "id": "pol4_icon", "label": "Card 4 icon", "default": "🚚" },
+    { "type": "text", "id": "pol4_title", "label": "Card 4 title", "default": "Pan-India delivery" },
+    { "type": "text", "id": "pol4_sub", "label": "Card 4 subtitle", "default": "2–3 business days" },
+    { "type": "color", "id": "text_color", "label": "Text colour", "default": "#2C2A3A" },
+    { "type": "color", "id": "muted_color", "label": "Muted colour", "default": "#7A7890" },
+    { "type": "color", "id": "bg_color", "label": "Section background", "default": "#FBF8F4" },
+    { "type": "color", "id": "policy_card_bg", "label": "Card background", "default": "#FFFFFF" },
+    { "type": "range", "id": "border_radius", "label": "Card radius", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 12 },
+    {
+      "type": "select", "id": "body_font", "label": "Font",
+      "options": [
+        { "value": "Nunito", "label": "Nunito" },
+        { "value": "Poppins", "label": "Poppins" },
+        { "value": "Inter", "label": "Inter" },
+        { "value": "DM Sans", "label": "DM Sans" },
+        { "value": "Raleway", "label": "Raleway" }
+      ],
+      "default": "Nunito"
+    }
+  ],
+  "presets": [
+    {
+      "name": "KC \u2014 Product Policy"
+    }
+  ]
+}
+{% endschema %}

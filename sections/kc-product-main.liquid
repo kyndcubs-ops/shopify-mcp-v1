@@ -1,0 +1,814 @@
+{%- liquid
+  assign cv = product.selected_or_first_available_variant
+  assign age_range = product.metafields.custom.age_range
+  assign is_best_seller = false
+  for tag in product.tags
+    if tag == section.settings.bestseller_tag
+      assign is_best_seller = true
+    endif
+  endfor
+  assign review_score = product.metafields.custom.review_score | default: '4.8'
+  assign review_count = product.metafields.custom.review_count | default: '142'
+  assign sold_count = product.metafields.custom.sold_count | default: section.settings.default_sold_count
+  assign sold_24hrs = product.metafields.custom.sold_24hrs | default: section.settings.default_sold_24
+  assign has_compare = false
+  if cv.compare_at_price > cv.price
+    assign has_compare = true
+    assign save_pct = cv.compare_at_price | minus: cv.price | times: 100 | divided_by: cv.compare_at_price
+  endif
+  assign emi_amount = cv.price | divided_by: 300
+  assign urgency_text = product.metafields.custom.urgency_text | default: section.settings.urgency_default
+  assign usp1 = product.metafields.custom.usp_1 | default: section.settings.default_usp1
+  assign usp2 = product.metafields.custom.usp_2 | default: section.settings.default_usp2
+  assign usp3 = product.metafields.custom.usp_3 | default: section.settings.default_usp3
+  assign usp4 = product.metafields.custom.usp_4 | default: section.settings.default_usp4
+  assign wa_num = section.settings.whatsapp_number
+  assign wa_msg = 'Check out this product: ' | append: product.title | url_encode
+  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg
+  assign offer_disc = product.metafields.custom.offer_discount
+  assign offer_gift = product.metafields.custom.offer_gift
+  assign offer_combo = product.metafields.custom.offer_combo
+-%}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family={{ section.settings.body_font | replace: ' ', '+' }}:wght@400;700;800;900&display=swap" rel="stylesheet">
+
+<div id="shopify-section-{{ section.id }}" class="kcm-wrap">
+  <div class="kcm-grid">
+
+    <!-- ── GALLERY COLUMN ── -->
+    <div class="kcm-gallery-col">
+      <div class="kcm-gallery__main-wrap" id="kcmGalleryWrap-{{ section.id }}">
+        <div class="kcm-gallery__main" id="kcmGalleryMain-{{ section.id }}">
+          {%- for image in product.images -%}
+            <div class="kcm-gallery__slide{% if forloop.first %} kcm-gallery__slide--active{% endif %}" data-index="{{ forloop.index0 }}">
+              <img src="{{ image | image_url: width: 800 }}" alt="{{ image.alt | default: product.title | escape }}" width="800" height="800" loading="{% if forloop.first %}eager{% else %}lazy{% endif %}">
+            </div>
+          {%- else -%}
+            <div class="kcm-gallery__slide kcm-gallery__slide--active">
+              <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.title | escape }}" width="800" height="800" loading="eager">
+            </div>
+          {%- endfor -%}
+        </div>
+        {%- if section.settings.show_share_btn -%}
+          <a href="{{ wa_link }}" target="_blank" rel="noopener" class="kcm-gallery__share" aria-label="Share on WhatsApp">📤</a>
+        {%- endif -%}
+        <div class="kcm-gallery__dots">
+          {%- for image in product.images -%}
+            <button class="kcm-gallery__dot{% if forloop.first %} kcm-gallery__dot--active{% endif %}" data-dot="{{ forloop.index0 }}" aria-label="Image {{ forloop.index }}" type="button"></button>
+          {%- endfor -%}
+        </div>
+      </div>
+      {%- if product.images.size > 1 -%}
+        <div class="kcm-gallery__thumbs" id="kcmGalleryThumbs-{{ section.id }}">
+          {%- for image in product.images -%}
+            <button class="kcm-gallery__thumb{% if forloop.first %} kcm-gallery__thumb--active{% endif %}" data-thumb="{{ forloop.index0 }}" type="button" aria-label="View image {{ forloop.index }}">
+              <img src="{{ image | image_url: width: 120 }}" alt="{{ image.alt | default: product.title | escape }}" width="120" height="120" loading="lazy">
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div><!-- /gallery col -->
+
+    <!-- ── INFO COLUMN ── -->
+    <div class="kcm-info-col">
+
+      <!-- Badges -->
+      <div class="kcm-badges">
+        {%- if section.settings.show_age_badge and age_range != blank -%}
+          <span class="kcm-badge kcm-badge--age">{{ age_range }}</span>
+        {%- endif -%}
+        {%- if section.settings.show_bestseller_badge and is_best_seller -%}
+          <span class="kcm-badge kcm-badge--bs" style="background:{{ section.settings.bestseller_badge_color }};color:{{ section.settings.bestseller_badge_text }};">{{ section.settings.bestseller_label }}</span>
+        {%- endif -%}
+      </div>
+
+      <!-- Title -->
+      <h1 class="kcm-title">{{ product.title }}</h1>
+
+      <!-- Rotating hook -->
+      {%- if section.settings.show_hook_block -%}
+        <div class="kcm-hook-wrap" id="kcmHook-{{ section.id }}" data-handle="{{ product.handle }}">
+          <span class="kcm-hook-by">{{ section.settings.hook_by_label }}</span>
+          <div class="kcm-hook-text" id="kcmHookText-{{ section.id }}">Loading…</div>
+        </div>
+      {%- endif -%}
+
+      <!-- Proof pills -->
+      {%- if section.settings.show_proof_pills -%}
+        <div class="kcm-proof-pills">
+          <span class="kcm-proof kcm-proof--green" style="background:{{ section.settings.proof_green_bg }};color:{{ section.settings.proof_green_text_color }};border-color:{{ section.settings.proof_green_text_color }};">
+            🏠 <span id="kcmSoldCount-{{ section.id }}">{{ sold_count }}</span>+ {{ section.settings.proof_green_text }}
+          </span>
+          <span class="kcm-proof kcm-proof--amber" style="background:{{ section.settings.proof_amber_bg }};color:{{ section.settings.proof_amber_text_color }};border-color:{{ section.settings.proof_amber_text_color }};">
+            🔥 <span id="kcmSold24-{{ section.id }}">{{ sold_24hrs }}</span> {{ section.settings.proof_amber_text }}
+          </span>
+        </div>
+      {%- endif -%}
+
+      <!-- Star rating row -->
+      {%- if section.settings.show_stars_row -%}
+        <div class="kcm-stars">
+          {%- assign score_f = review_score | times: 1.0 -%}
+          {%- assign score_int = score_f | floor -%}
+          {%- for i in (1..5) -%}
+            {%- if i <= score_int -%}
+              <span class="kcm-star kcm-star--full">★</span>
+            {%- else -%}
+              <span class="kcm-star kcm-star--empty">★</span>
+            {%- endif -%}
+          {%- endfor -%}
+          <span class="kcm-score">{{ review_score }}</span>
+          <a href="#kc-reviews" class="kcm-review-count">({{ review_count }} reviews)</a>
+        </div>
+      {%- endif -%}
+
+      <!-- Price card -->
+      <div class="kcm-price-card">
+        <div class="kcm-price-row">
+          <span class="kcm-price" id="kcmPrice-{{ section.id }}">{{ cv.price | money }}</span>
+          {%- if has_compare -%}
+            <span class="kcm-mrp" id="kcmMrp-{{ section.id }}">{{ cv.compare_at_price | money }}</span>
+            <span class="kcm-save" id="kcmSave-{{ section.id }}">Save {{ save_pct }}%</span>
+          {%- else -%}
+            <span class="kcm-mrp" id="kcmMrp-{{ section.id }}" style="display:none;"></span>
+            <span class="kcm-save" id="kcmSave-{{ section.id }}" style="display:none;"></span>
+          {%- endif -%}
+        </div>
+        {%- if section.settings.show_emi and cv.price >= 90000 -%}
+          <p class="kcm-emi" id="kcmEmi-{{ section.id }}">{{ section.settings.emi_label | replace: '{amt}', emi_amount }}</p>
+        {%- else -%}
+          <p class="kcm-emi" id="kcmEmi-{{ section.id }}" style="display:none;"></p>
+        {%- endif -%}
+      </div>
+
+      <!-- Variant selector -->
+      {%- if product.variants.size > 1 -%}
+        <div class="kcm-variants">
+          <label class="kcm-variant-label">{{ product.options.first }}:</label>
+          <div class="kcm-variant-pills">
+            {%- for variant in product.variants -%}
+              <button type="button"
+                class="kcm-variant-pill{% if variant.id == cv.id %} kcm-variant-pill--selected{% endif %}{% unless variant.available %} kcm-variant-pill--sold-out{% endunless %}"
+                data-variant-id="{{ variant.id }}"
+                data-price="{{ variant.price }}"
+                data-compare="{{ variant.compare_at_price }}"
+                data-available="{{ variant.available }}">
+                {{ variant.title }}
+              </button>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      <!-- USP grid -->
+      <div class="kcm-usp-grid" style="background:{{ section.settings.usp_bg }};border-color:{{ section.settings.usp_brd }};">
+        {%- if usp1 != blank -%}<span class="kcm-usp" style="color:{{ section.settings.usp_txt }};">{{ usp1 }}</span>{%- endif -%}
+        {%- if usp2 != blank -%}<span class="kcm-usp" style="color:{{ section.settings.usp_txt }};">{{ usp2 }}</span>{%- endif -%}
+        {%- if usp3 != blank -%}<span class="kcm-usp" style="color:{{ section.settings.usp_txt }};">{{ usp3 }}</span>{%- endif -%}
+        {%- if usp4 != blank -%}<span class="kcm-usp" style="color:{{ section.settings.usp_txt }};">{{ usp4 }}</span>{%- endif -%}
+      </div>
+
+      <!-- Urgency bar -->
+      {%- if section.settings.show_urgency_bar and urgency_text != blank -%}
+        <div class="kcm-urgency" style="background:{{ section.settings.urgency_bg }};color:{{ section.settings.urgency_color }};border-color:{{ section.settings.urgency_color }};">
+          <span class="kcm-urgency-dot"></span>
+          <span class="kcm-urgency-text" id="kcmUrgency-{{ section.id }}">{{ urgency_text }}</span>
+        </div>
+      {%- endif -%}
+
+      <!-- Qty + ATC -->
+      <div class="kcm-qty-atc">
+        <div class="kcm-qty">
+          <button type="button" class="kcm-qty-btn kcm-qty-minus" aria-label="Decrease quantity">−</button>
+          <span class="kcm-qty-val" id="kcmQty-{{ section.id }}">1</span>
+          <button type="button" class="kcm-qty-btn kcm-qty-plus" aria-label="Increase quantity">+</button>
+        </div>
+        <button type="button" class="kcm-atc-btn" id="kcmATC-{{ section.id }}" data-variant-id="{{ cv.id }}">{{ section.settings.atc_button_text }}</button>
+      </div>
+
+      {%- if section.settings.show_buy_now -%}
+        <button type="button" class="kcm-buynow-btn" id="kcmBuyNow-{{ section.id }}" data-variant-id="{{ cv.id }}"
+          style="background:{{ section.settings.buynow_bg }};color:{{ section.settings.buynow_text_color }};">
+          {{ section.settings.buynow_button_text }}
+        </button>
+      {%- endif -%}
+
+      {%- if section.settings.show_atc_reassurance and section.settings.atc_reassurance != blank -%}
+        <p class="kcm-reassurance">{{ section.settings.atc_reassurance }}</p>
+      {%- endif -%}
+
+      <!-- Shipping strip -->
+      <div class="kcm-ship-strip" style="background:{{ section.settings.ship_bg }};color:{{ section.settings.ship_txt }};">
+        <div class="kcm-ship-item">
+          <span class="kcm-ship-icon">{{ section.settings.ship1_icon }}</span>
+          <span class="kcm-ship-lbl">{{ section.settings.ship1_lbl }}</span>
+        </div>
+        <div class="kcm-ship-item">
+          <span class="kcm-ship-icon">{{ section.settings.ship2_icon }}</span>
+          <span class="kcm-ship-lbl">{{ section.settings.ship2_lbl }}</span>
+        </div>
+        <div class="kcm-ship-item">
+          <span class="kcm-ship-icon">{{ section.settings.ship3_icon }}</span>
+          <span class="kcm-ship-lbl">{{ section.settings.ship3_lbl }}</span>
+        </div>
+      </div>
+
+      <!-- Offers -->
+      {%- if section.settings.show_offers -%}
+        {%- if offer_disc != blank or offer_gift != blank or offer_combo != blank -%}
+          <div class="kcm-offers" style="background:{{ section.settings.offer_bg }};border-color:{{ section.settings.offer_brd }};color:{{ section.settings.offer_txt }};">
+            <p class="kcm-offers-title">{{ section.settings.offers_title }}</p>
+            {%- if offer_disc != blank -%}
+              <div class="kcm-offer-row">
+                <span class="kcm-offer-badge" style="color:{{ section.settings.offer_disc_color }};">{{ section.settings.offer_disc_label }}</span>
+                <span>{{ offer_disc }}</span>
+              </div>
+            {%- endif -%}
+            {%- if offer_gift != blank -%}
+              <div class="kcm-offer-row">
+                <span class="kcm-offer-badge" style="color:{{ section.settings.offer_gift_color }};">{{ section.settings.offer_gift_label }}</span>
+                <span>{{ offer_gift }}</span>
+              </div>
+            {%- endif -%}
+            {%- if offer_combo != blank -%}
+              <div class="kcm-offer-row">
+                <span class="kcm-offer-badge" style="color:{{ section.settings.offer_combo_color }};">{{ section.settings.offer_combo_label }}</span>
+                <span>{{ offer_combo }}</span>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+
+    </div><!-- /info col -->
+  </div><!-- /grid -->
+</div>
+
+<!-- Hidden inputs for cross-section communication -->
+<input type="hidden" id="kcm-vid" value="{{ cv.id }}">
+<input type="hidden" id="kcm-qval" value="1">
+
+<style>
+  :root {
+    --kc-brand: {{ section.settings.brand_color }};
+    --kc-brand-dk: {{ section.settings.brand_color_dk }};
+    --kc-brand-lt: {{ section.settings.brand_color_lt }};
+    --kc-accent: {{ section.settings.accent_color }};
+    --kc-bg: {{ section.settings.bg_color }};
+    --kc-text: {{ section.settings.text_color }};
+    --kc-muted: {{ section.settings.muted_color }};
+    --kc-success: {{ section.settings.success_color }};
+    --kc-star: {{ section.settings.star_color }};
+    --kc-radius: {{ section.settings.border_radius }}px;
+    --kc-btn-radius: {{ section.settings.button_radius }}px;
+    --kc-gallery-w: {{ section.settings.gallery_width }}px;
+    --kc-sticky-top: {{ section.settings.sticky_top }}px;
+    --kc-font: '{{ section.settings.body_font }}', sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} {
+    background: var(--kc-bg);
+    font-family: var(--kc-font);
+    padding: 12px 16px 24px;
+  }
+  .kcm-grid {
+    display: block;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── Gallery ── */
+  .kcm-gallery-col { margin-bottom: 20px; }
+  .kcm-gallery__main-wrap {
+    position: relative;
+    border-radius: var(--kc-radius);
+    overflow: hidden;
+    background: #F0EBE3;
+    aspect-ratio: {{ section.settings.gallery_ratio }};
+    touch-action: pan-y;
+    user-select: none;
+  }
+  .kcm-gallery__main { position: relative; width: 100%; height: 100%; }
+  .kcm-gallery__slide { position: absolute; inset: 0; opacity: 0; transition: opacity 0.35s ease; }
+  .kcm-gallery__slide--active { opacity: 1; z-index: 1; }
+  .kcm-gallery__slide img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .kcm-gallery__share {
+    position: absolute; top: 12px; right: 12px; z-index: 10;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: #fff; display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,.12);
+    text-decoration: none; transition: transform 0.2s;
+  }
+  .kcm-gallery__share:hover { transform: scale(1.1); }
+  .kcm-gallery__dots {
+    position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px; z-index: 10;
+  }
+  .kcm-gallery__dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,.5); border: none; cursor: pointer; padding: 0;
+    transition: background 0.2s;
+  }
+  .kcm-gallery__dot--active { background: #fff; }
+  .kcm-gallery__thumbs {
+    display: flex; gap: 8px; margin-top: 10px;
+    overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding-bottom: 2px;
+  }
+  .kcm-gallery__thumbs::-webkit-scrollbar { display: none; }
+  .kcm-gallery__thumb {
+    flex-shrink: 0; width: 64px; height: 64px;
+    border-radius: 10px; overflow: hidden;
+    border: 2px solid transparent; cursor: pointer; padding: 0; background: none;
+    transition: border-color 0.2s;
+  }
+  .kcm-gallery__thumb--active { border-color: var(--kc-brand); }
+  .kcm-gallery__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ── Info ── */
+  .kcm-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+  .kcm-badge {
+    display: inline-flex; align-items: center;
+    padding: 4px 12px; border-radius: 99px;
+    font-size: 12px; font-weight: 800;
+  }
+  .kcm-badge--age { background: var(--kc-brand-lt); color: var(--kc-brand); border: 1.5px solid #DDD8FF; }
+  .kcm-badge--bs { border: 1.5px solid var(--kc-star); }
+  .kcm-title {
+    font-weight: 900;
+    font-size: {{ section.settings.title_size }}px;
+    color: var(--kc-text); line-height: 1.25; margin-bottom: 14px;
+  }
+  .kcm-hook-wrap {
+    background: var(--kc-brand-lt); border-left: 4px solid var(--kc-brand);
+    border-radius: 0 var(--kc-radius) var(--kc-radius) 0;
+    padding: 10px 14px; margin-bottom: 14px; min-height: 48px;
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .kcm-hook-by { font-size: 10px; font-weight: 800; color: var(--kc-brand); text-transform: uppercase; letter-spacing: .05em; }
+  .kcm-hook-text { font-size: 13px; font-style: italic; color: var(--kc-text); transition: opacity 0.5s; }
+  .kcm-proof-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .kcm-proof {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 5px 12px; border-radius: 99px;
+    font-size: 12px; font-weight: 800; border: 1.5px solid;
+  }
+  .kcm-stars { display: flex; align-items: center; gap: 3px; margin-bottom: 14px; flex-wrap: wrap; }
+  .kcm-star { font-size: 16px; }
+  .kcm-star--full { color: var(--kc-star); }
+  .kcm-star--empty { color: #EDE8E0; }
+  .kcm-score { font-weight: 800; font-size: 14px; color: var(--kc-text); margin-left: 2px; }
+  .kcm-review-count { font-size: 13px; color: var(--kc-brand); text-decoration: underline; margin-left: 2px; }
+  .kcm-price-card {
+    background: var(--kc-brand-lt); border: 1.5px solid #DDD8FF;
+    border-radius: var(--kc-radius); padding: 14px 16px; margin-bottom: 16px;
+  }
+  .kcm-price-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .kcm-price { font-weight: 900; font-size: {{ section.settings.price_size }}px; color: var(--kc-text); }
+  .kcm-mrp { font-size: 16px; color: var(--kc-muted); text-decoration: line-through; }
+  .kcm-save {
+    background: var(--kc-success); color: #fff;
+    font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 99px;
+  }
+  .kcm-emi { margin-top: 6px; font-size: 13px; color: var(--kc-muted); font-weight: 700; }
+  .kcm-variants { margin-bottom: 14px; }
+  .kcm-variant-label { font-size: 13px; font-weight: 800; color: var(--kc-text); margin-bottom: 8px; display: block; }
+  .kcm-variant-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .kcm-variant-pill {
+    padding: 6px 16px; border-radius: 99px; border: 2px solid #EDE8E0;
+    background: #fff; font-family: var(--kc-font);
+    font-size: 13px; font-weight: 700; color: var(--kc-text); cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .kcm-variant-pill--selected { border-color: var(--kc-brand); background: var(--kc-brand-lt); color: var(--kc-brand); }
+  .kcm-variant-pill--sold-out { opacity: .45; text-decoration: line-through; cursor: not-allowed; }
+  .kcm-usp-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 8px; margin-bottom: 14px;
+    border: 1.5px solid; border-radius: var(--kc-radius); padding: 10px;
+  }
+  .kcm-usp {
+    font-size: 12px; font-weight: 800; text-align: center;
+    padding: 6px 4px; border-radius: calc(var(--kc-radius) - 4px);
+    background: rgba(255,255,255,0.7);
+  }
+  .kcm-urgency {
+    display: flex; align-items: center; gap: 8px;
+    border: 1.5px solid; border-radius: var(--kc-radius);
+    padding: 10px 14px; margin-bottom: 16px;
+  }
+  .kcm-urgency-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0; animation: kcmBlink 1s infinite;
+  }
+  @keyframes kcmBlink { 0%,100%{opacity:1} 50%{opacity:.2} }
+  .kcm-urgency-text { font-size: 13px; font-weight: 800; }
+  .kcm-qty-atc { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+  .kcm-qty {
+    display: flex; align-items: center;
+    border: 2px solid #EDE8E0; border-radius: 99px;
+    overflow: hidden; height: 52px; flex-shrink: 0;
+  }
+  .kcm-qty-btn {
+    width: 44px; height: 100%; background: none; border: none;
+    font-size: 20px; font-weight: 700; color: var(--kc-text); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--kc-font);
+  }
+  .kcm-qty-btn:hover { background: var(--kc-brand-lt); }
+  .kcm-qty-val { min-width: 36px; text-align: center; font-weight: 800; font-size: 16px; color: var(--kc-text); }
+  .kcm-atc-btn {
+    flex: 1; height: 52px; border-radius: var(--kc-btn-radius);
+    background: var(--kc-brand); color: #fff; border: none;
+    font-family: var(--kc-font); font-size: {{ section.settings.atc_font_size }}px;
+    font-weight: 800; cursor: pointer; transition: background 0.2s, opacity 0.2s;
+  }
+  .kcm-atc-btn:hover { background: var(--kc-brand-dk); }
+  .kcm-atc-btn:disabled { opacity: .7; cursor: not-allowed; }
+  .kcm-buynow-btn {
+    display: block; width: 100%; height: 52px;
+    border-radius: var(--kc-btn-radius); border: none;
+    font-family: var(--kc-font); font-size: {{ section.settings.atc_font_size }}px;
+    font-weight: 800; cursor: pointer; margin-bottom: 10px;
+    transition: opacity 0.2s;
+  }
+  .kcm-buynow-btn:hover { opacity: .88; }
+  .kcm-buynow-btn:disabled { opacity: .7; cursor: not-allowed; }
+  .kcm-reassurance { font-size: 12px; color: var(--kc-muted); text-align: center; margin-bottom: 12px; }
+  .kcm-ship-strip {
+    display: flex; justify-content: space-around;
+    border-radius: var(--kc-radius); padding: 12px; margin-bottom: 14px;
+  }
+  .kcm-ship-item { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+  .kcm-ship-icon { font-size: 20px; }
+  .kcm-ship-lbl { font-size: 11px; font-weight: 700; }
+  .kcm-offers {
+    border: 1.5px solid; border-radius: var(--kc-radius); padding: 12px 14px;
+  }
+  .kcm-offers-title { font-size: 12px; font-weight: 800; margin-bottom: 8px; }
+  .kcm-offer-row { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; margin-bottom: 4px; }
+  .kcm-offer-badge { font-size: 11px; font-weight: 800; }
+
+  /* ── Desktop grid ── */
+  @media (min-width: 900px) {
+    #shopify-section-{{ section.id }} { padding: 24px 32px 40px; }
+    .kcm-grid {
+      display: grid;
+      grid-template-columns: var(--kc-gallery-w) 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .kcm-gallery-col {
+      position: sticky;
+      top: var(--kc-sticky-top);
+      margin-bottom: 0;
+    }
+    .kcm-gallery__dots { display: none; }
+    .kcm-gallery__thumb { width: 72px; height: 72px; }
+    .kcm-title { font-size: {{ section.settings.title_size_desktop }}px; }
+    .kcm-ship-lbl { font-size: 12px; }
+    .kcm-atc-btn, .kcm-buynow-btn { font-size: 17px; height: 56px; }
+  }
+  @media (min-width: 1200px) {
+    .kcm-gallery__thumb { width: 80px; height: 80px; }
+  }
+</style>
+
+<script>
+(function() {
+  var sid = '{{ section.id }}';
+  var wrap = document.getElementById('kcmGalleryWrap-' + sid);
+  var vidInput = document.getElementById('kcm-vid');
+  var qInput = document.getElementById('kcm-qval');
+  var qtyEl = document.getElementById('kcmQty-' + sid);
+  var atcBtn = document.getElementById('kcmATC-' + sid);
+  var buyNowBtn = document.getElementById('kcmBuyNow-' + sid);
+  var stickyBtn = document.getElementById('kc-sticky-btn');
+  var stickyPrice = document.getElementById('kc-sticky-price');
+  var section = document.getElementById('shopify-section-' + sid);
+
+  // ── Gallery swipe ──
+  if (wrap) {
+    var slides = wrap.querySelectorAll('.kcm-gallery__slide');
+    var dots = wrap.querySelectorAll('.kcm-gallery__dot');
+    var thumbBtns = document.querySelectorAll('#shopify-section-' + sid + ' .kcm-gallery__thumb');
+    var cur = 0, total = slides.length;
+    if (total > 1) {
+      function goTo(idx) {
+        slides[cur].classList.remove('kcm-gallery__slide--active');
+        if (dots[cur]) dots[cur].classList.remove('kcm-gallery__dot--active');
+        if (thumbBtns[cur]) thumbBtns[cur].classList.remove('kcm-gallery__thumb--active');
+        cur = (idx + total) % total;
+        slides[cur].classList.add('kcm-gallery__slide--active');
+        if (dots[cur]) dots[cur].classList.add('kcm-gallery__dot--active');
+        if (thumbBtns[cur]) thumbBtns[cur].classList.add('kcm-gallery__thumb--active');
+      }
+      dots.forEach(function(d) { d.addEventListener('click', function() { goTo(+d.getAttribute('data-dot')); }); });
+      thumbBtns.forEach(function(b) { b.addEventListener('click', function() { goTo(+b.getAttribute('data-thumb')); }); });
+      var sx = 0, dragging = false;
+      wrap.addEventListener('mousedown', function(e) { sx = e.clientX; dragging = true; });
+      wrap.addEventListener('mouseup', function(e) { if (!dragging) return; dragging = false; if (Math.abs(e.clientX - sx) > 40) goTo(e.clientX < sx ? cur + 1 : cur - 1); });
+      wrap.addEventListener('mouseleave', function() { dragging = false; });
+      wrap.addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; }, { passive: true });
+      wrap.addEventListener('touchend', function(e) { var dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) goTo(dx < 0 ? cur + 1 : cur - 1); });
+    }
+  }
+
+  // ── Qty stepper ──
+  var qty = 1;
+  if (section) {
+    section.addEventListener('click', function(e) {
+      if (e.target.closest('.kcm-qty-minus')) { if (qty > 1) { qty--; if (qtyEl) qtyEl.textContent = qty; if (qInput) qInput.value = qty; } }
+      if (e.target.closest('.kcm-qty-plus')) { qty++; if (qtyEl) qtyEl.textContent = qty; if (qInput) qInput.value = qty; }
+    });
+  }
+
+  // ── Variant data ──
+  var variantData = {{ product.variants | json }};
+  var selectedVid = '{{ cv.id }}';
+
+  function formatMoney(cents) {
+    return '\u20B9' + (cents / 100).toFixed(0);
+  }
+
+  function updateVariant(vid) {
+    selectedVid = String(vid);
+    if (vidInput) vidInput.value = selectedVid;
+    if (atcBtn) atcBtn.setAttribute('data-variant-id', selectedVid);
+    if (buyNowBtn) buyNowBtn.setAttribute('data-variant-id', selectedVid);
+    var v = variantData.find(function(x) { return String(x.id) === selectedVid; });
+    if (!v) return;
+    var priceEl = document.getElementById('kcmPrice-' + sid);
+    var mrpEl = document.getElementById('kcmMrp-' + sid);
+    var saveEl = document.getElementById('kcmSave-' + sid);
+    var emiEl = document.getElementById('kcmEmi-' + sid);
+    if (priceEl) priceEl.textContent = formatMoney(v.price);
+    if (stickyPrice) stickyPrice.textContent = formatMoney(v.price);
+    if (v.compare_at_price && v.compare_at_price > v.price) {
+      if (mrpEl) { mrpEl.textContent = formatMoney(v.compare_at_price); mrpEl.style.display = ''; }
+      var pct = Math.round((v.compare_at_price - v.price) * 100 / v.compare_at_price);
+      if (saveEl) { saveEl.textContent = 'Save ' + pct + '%'; saveEl.style.display = ''; }
+    } else {
+      if (mrpEl) mrpEl.style.display = 'none';
+      if (saveEl) saveEl.style.display = 'none';
+    }
+    if (emiEl) {
+      if (v.price >= 90000) { emiEl.style.display = ''; emiEl.textContent = 'or 3 \xD7 \u20B9' + Math.round(v.price / 300) + '/mo \xB7 no-cost EMI'; }
+      else emiEl.style.display = 'none';
+    }
+    if (atcBtn) { atcBtn.disabled = !v.available; atcBtn.textContent = v.available ? '{{ section.settings.atc_button_text }}' : 'Sold Out'; }
+    if (stickyBtn) { stickyBtn.disabled = !v.available; stickyBtn.textContent = v.available ? '{{ section.settings.sticky_button_text }}' : 'Sold Out'; }
+  }
+
+  if (section) {
+    section.addEventListener('click', function(e) {
+      var pill = e.target.closest('.kcm-variant-pill');
+      if (!pill) return;
+      if (pill.getAttribute('data-available') === 'false') return;
+      section.querySelectorAll('.kcm-variant-pill').forEach(function(p) { p.classList.remove('kcm-variant-pill--selected'); });
+      pill.classList.add('kcm-variant-pill--selected');
+      updateVariant(pill.getAttribute('data-variant-id'));
+    });
+  }
+
+  // ── AJAX cart ──
+  function addToCart(variantId, quantity, redirect) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify({ id: parseInt(variantId, 10), quantity: quantity })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() { return fetch('/cart.js'); })
+    .then(function(r) { return r.json(); })
+    .then(function(cart) {
+      document.querySelectorAll('.cart-count-bubble').forEach(function(el) {
+        el.removeAttribute('hidden');
+        var sp = el.querySelector('span[aria-hidden]') || el.querySelector('span');
+        if (sp) sp.textContent = cart.item_count;
+      });
+      if (redirect) window.location.href = '/checkout';
+    });
+  }
+
+  if (atcBtn) {
+    atcBtn.addEventListener('click', function() {
+      var vid = atcBtn.getAttribute('data-variant-id');
+      if (!vid) return;
+      atcBtn.disabled = true;
+      atcBtn.textContent = 'Adding\u2026';
+      addToCart(vid, qty, false)
+        .then(function() { atcBtn.textContent = '\u2713 Added!'; setTimeout(function() { atcBtn.textContent = '{{ section.settings.atc_button_text }}'; atcBtn.disabled = false; }, 2000); })
+        .catch(function() { atcBtn.textContent = '{{ section.settings.atc_button_text }}'; atcBtn.disabled = false; });
+    });
+  }
+
+  if (buyNowBtn) {
+    buyNowBtn.addEventListener('click', function() {
+      var vid = buyNowBtn.getAttribute('data-variant-id');
+      if (!vid) return;
+      buyNowBtn.disabled = true;
+      buyNowBtn.textContent = 'Redirecting\u2026';
+      addToCart(vid, qty, true)
+        .catch(function() { buyNowBtn.textContent = '{{ section.settings.buynow_button_text }}'; buyNowBtn.disabled = false; });
+    });
+  }
+
+  // ── Rotating hook (Judge.me API with fallback) ──
+  var hookEl = document.getElementById('kcmHookText-' + sid);
+  if (hookEl) {
+    var handle = '{{ product.handle }}';
+    var fallbackHooks = [
+      '"My daughter hasn\'t put it down in weeks!" \u2014 Priya, Mumbai',
+      '"Best toy we\'ve bought this year." \u2014 Ankit, Bangalore',
+      '"Keeps my toddler engaged for hours." \u2014 Deepa, Delhi',
+      '"Great quality, totally safe." \u2014 Rahul, Pune',
+      '"Arrived beautifully packaged \u2014 perfect gift!" \u2014 Sneha, Chennai'
+    ];
+    var hookList = fallbackHooks;
+    var hookIdx = 0;
+    function showHook() {
+      hookEl.style.opacity = '0';
+      setTimeout(function() { hookEl.textContent = hookList[hookIdx]; hookEl.style.opacity = '1'; hookIdx = (hookIdx + 1) % hookList.length; }, 300);
+    }
+    fetch('/a/judgeme/widgets/judgeme_reviews?handle=' + handle + '&page=1&per_page=10')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        var reviews = (data.reviews || []).filter(function(r) { return r.rating >= 4 && r.body && r.body.length > 20; });
+        if (reviews.length > 2) {
+          hookList = reviews.map(function(r) { return '\u201C' + r.body.substring(0, 100) + '\u2026\u201D \u2014 ' + (r.reviewer ? r.reviewer.name : 'Customer'); });
+        }
+        hookIdx = 0;
+        showHook();
+      })
+      .catch(function() { showHook(); });
+    setInterval(showHook, 3500);
+  }
+
+  // ── Proof pills rotate every 30s ──
+  var soldEl = document.getElementById('kcmSoldCount-' + sid);
+  var sold24El = document.getElementById('kcmSold24-' + sid);
+  if (soldEl && sold24El) {
+    setInterval(function() {
+      soldEl.textContent = (parseInt(soldEl.textContent) || {{ section.settings.default_sold_count }}) + Math.floor(Math.random() * 3);
+      sold24El.textContent = (parseInt(sold24El.textContent) || {{ section.settings.default_sold_24 }}) + Math.floor(Math.random() * 2);
+    }, 30000);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "KC — Product Main",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand colours"
+    },
+    { "type": "color", "id": "brand_color", "label": "Brand colour", "default": "#6B5FD4" },
+    { "type": "color", "id": "brand_color_dk", "label": "Brand dark", "default": "#4A3FB8" },
+    { "type": "color", "id": "brand_color_lt", "label": "Brand light", "default": "#F0EDFF" },
+    { "type": "color", "id": "accent_color", "label": "Accent colour", "default": "#D4687A" },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#FBF8F4" },
+    { "type": "color", "id": "text_color", "label": "Text colour", "default": "#2C2A3A" },
+    { "type": "color", "id": "muted_color", "label": "Muted colour", "default": "#7A7890" },
+    { "type": "color", "id": "success_color", "label": "Success colour", "default": "#4A7C6F" },
+    { "type": "color", "id": "star_color", "label": "Star colour", "default": "#E8C14A" },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "select", "id": "body_font", "label": "Font",
+      "options": [
+        { "value": "Nunito", "label": "Nunito" },
+        { "value": "Poppins", "label": "Poppins" },
+        { "value": "Inter", "label": "Inter" },
+        { "value": "DM Sans", "label": "DM Sans" },
+        { "value": "Raleway", "label": "Raleway" }
+      ],
+      "default": "Nunito"
+    },
+    { "type": "range", "id": "title_size", "label": "Title size (mobile)", "min": 16, "max": 30, "step": 1, "unit": "px", "default": 20 },
+    { "type": "range", "id": "title_size_desktop", "label": "Title size (desktop)", "min": 18, "max": 36, "step": 1, "unit": "px", "default": 22 },
+    { "type": "range", "id": "price_size", "label": "Price size", "min": 20, "max": 40, "step": 1, "unit": "px", "default": 28 },
+    { "type": "range", "id": "atc_font_size", "label": "Button font size", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 15 },
+    { "type": "range", "id": "border_radius", "label": "Border radius", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 12 },
+    { "type": "range", "id": "button_radius", "label": "Button radius", "min": 0, "max": 30, "step": 1, "unit": "px", "default": 12 },
+    {
+      "type": "header",
+      "content": "Gallery"
+    },
+    { "type": "range", "id": "gallery_width", "label": "Gallery column width (desktop)", "min": 380, "max": 600, "step": 10, "unit": "px", "default": 480 },
+    { "type": "range", "id": "sticky_top", "label": "Sticky offset from top", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 80 },
+    {
+      "type": "select", "id": "gallery_ratio", "label": "Gallery aspect ratio",
+      "options": [
+        { "value": "1", "label": "1:1 (square)" },
+        { "value": "4/5", "label": "4:5 (portrait)" },
+        { "value": "3/4", "label": "3:4" },
+        { "value": "16/9", "label": "16:9 (wide)" }
+      ],
+      "default": "1"
+    },
+    { "type": "checkbox", "id": "show_share_btn", "label": "Show share button", "default": true },
+    {
+      "type": "header",
+      "content": "Badges & proof"
+    },
+    { "type": "checkbox", "id": "show_age_badge", "label": "Show age badge", "default": true },
+    { "type": "checkbox", "id": "show_bestseller_badge", "label": "Show bestseller badge", "default": true },
+    { "type": "text", "id": "bestseller_tag", "label": "Bestseller product tag", "default": "best-seller" },
+    { "type": "text", "id": "bestseller_label", "label": "Bestseller badge text", "default": "⭐ Best Seller" },
+    { "type": "color", "id": "bestseller_badge_color", "label": "Bestseller badge background", "default": "#FFF8E0" },
+    { "type": "color", "id": "bestseller_badge_text", "label": "Bestseller badge text colour", "default": "#2C2A3A" },
+    { "type": "checkbox", "id": "show_hook_block", "label": "Show rotating review hook", "default": true },
+    { "type": "text", "id": "hook_by_label", "label": "Hook 'by' label", "default": "★ Verified buyer" },
+    { "type": "checkbox", "id": "show_proof_pills", "label": "Show proof pills", "default": true },
+    { "type": "text", "id": "proof_green_text", "label": "Green pill text", "default": "families love this" },
+    { "type": "text", "id": "proof_amber_text", "label": "Amber pill text", "default": "sold in last 24hrs" },
+    { "type": "color", "id": "proof_green_bg", "label": "Green pill background", "default": "#E8F4F0" },
+    { "type": "color", "id": "proof_green_text_color", "label": "Green pill text colour", "default": "#4A7C6F" },
+    { "type": "color", "id": "proof_amber_bg", "label": "Amber pill background", "default": "#FFF8E0" },
+    { "type": "color", "id": "proof_amber_text_color", "label": "Amber pill text colour", "default": "#9B6F00" },
+    { "type": "checkbox", "id": "show_stars_row", "label": "Show star rating row", "default": true },
+    { "type": "number", "id": "default_sold_count", "label": "Default sold count", "default": 500 },
+    { "type": "number", "id": "default_sold_24", "label": "Default sold last 24h", "default": 12 },
+    {
+      "type": "header",
+      "content": "Price & EMI"
+    },
+    { "type": "checkbox", "id": "show_emi", "label": "Show EMI line", "default": false },
+    { "type": "text", "id": "emi_label", "label": "EMI label (use {amt} for amount)", "default": "or 3 \u00D7 \u20B9{amt}/mo \u00B7 no-cost EMI" },
+    {
+      "type": "header",
+      "content": "Urgency"
+    },
+    { "type": "checkbox", "id": "show_urgency_bar", "label": "Show urgency bar", "default": true },
+    { "type": "text", "id": "urgency_default", "label": "Default urgency text", "default": "Only 8 left in stock \u2014 order today!" },
+    { "type": "color", "id": "urgency_bg", "label": "Urgency background", "default": "#FFF0F3" },
+    { "type": "color", "id": "urgency_color", "label": "Urgency text & dot colour", "default": "#D4687A" },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    { "type": "text", "id": "atc_button_text", "label": "Add to Cart text", "default": "Add to Cart" },
+    { "type": "checkbox", "id": "show_buy_now", "label": "Show Buy Now button", "default": true },
+    { "type": "text", "id": "buynow_button_text", "label": "Buy Now text", "default": "Buy Now" },
+    { "type": "color", "id": "buynow_bg", "label": "Buy Now background", "default": "#2C2A3A" },
+    { "type": "color", "id": "buynow_text_color", "label": "Buy Now text colour", "default": "#FFFFFF" },
+    { "type": "checkbox", "id": "show_atc_reassurance", "label": "Show reassurance text", "default": true },
+    { "type": "text", "id": "atc_reassurance", "label": "Reassurance text", "default": "\uD83D\uDD12 Secure checkout \u00B7 Free returns \u00B7 COD available" },
+    { "type": "text", "id": "sticky_button_text", "label": "Sticky bar button text", "default": "Add to Cart" },
+    {
+      "type": "header",
+      "content": "Shipping strip"
+    },
+    { "type": "color", "id": "ship_bg", "label": "Strip background", "default": "#E8F4F0" },
+    { "type": "color", "id": "ship_txt", "label": "Strip text colour", "default": "#4A7C6F" },
+    { "type": "text", "id": "ship1_icon", "label": "Item 1 icon", "default": "\uD83D\uDE9A" },
+    { "type": "text", "id": "ship1_lbl", "label": "Item 1 label", "default": "Free above \u20B9499" },
+    { "type": "text", "id": "ship2_icon", "label": "Item 2 icon", "default": "\u23F1\uFE0F" },
+    { "type": "text", "id": "ship2_lbl", "label": "Item 2 label", "default": "2\u20133 day delivery" },
+    { "type": "text", "id": "ship3_icon", "label": "Item 3 icon", "default": "\uD83D\uDCB5" },
+    { "type": "text", "id": "ship3_lbl", "label": "Item 3 label", "default": "COD available" },
+    {
+      "type": "header",
+      "content": "Offers"
+    },
+    { "type": "checkbox", "id": "show_offers", "label": "Show offers block", "default": true },
+    { "type": "text", "id": "offers_title", "label": "Offers heading", "default": "\uD83C\uDF89 Available Offers" },
+    { "type": "color", "id": "offer_bg", "label": "Offers background", "default": "#FFFBEF" },
+    { "type": "color", "id": "offer_brd", "label": "Offers border", "default": "#E8C14A" },
+    { "type": "color", "id": "offer_txt", "label": "Offers text", "default": "#2C2A3A" },
+    { "type": "text", "id": "offer_disc_label", "label": "Discount label", "default": "DISC" },
+    { "type": "color", "id": "offer_disc_color", "label": "Discount label colour", "default": "#D4687A" },
+    { "type": "text", "id": "offer_gift_label", "label": "Gift label", "default": "GIFT" },
+    { "type": "color", "id": "offer_gift_color", "label": "Gift label colour", "default": "#4A7C6F" },
+    { "type": "text", "id": "offer_combo_label", "label": "Combo label", "default": "COMBO" },
+    { "type": "color", "id": "offer_combo_color", "label": "Combo label colour", "default": "#6B5FD4" },
+    {
+      "type": "header",
+      "content": "USP grid"
+    },
+    { "type": "color", "id": "usp_bg", "label": "USP background", "default": "#F0EDFF" },
+    { "type": "color", "id": "usp_brd", "label": "USP border", "default": "#DDD8FF" },
+    { "type": "color", "id": "usp_txt", "label": "USP text colour", "default": "#2C2A3A" },
+    { "type": "text", "id": "default_usp1", "label": "USP 1", "default": "\u2705 Safety tested" },
+    { "type": "text", "id": "default_usp2", "label": "USP 2", "default": "\uD83D\uDE9A Fast delivery" },
+    { "type": "text", "id": "default_usp3", "label": "USP 3", "default": "\uD83C\uDF3F Non-toxic & BPA free" },
+    { "type": "text", "id": "default_usp4", "label": "USP 4", "default": "\uD83C\uDF81 Gift-ready packaging" },
+    {
+      "type": "header",
+      "content": "WhatsApp"
+    },
+    { "type": "text", "id": "whatsapp_number", "label": "WhatsApp number", "default": "917509802310" }
+  ],
+  "presets": [
+    {
+      "name": "KC \u2014 Product main"
+    }
+  ]
+}
+{% endschema %}
