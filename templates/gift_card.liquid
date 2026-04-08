@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money_without_trailing_zeros, shop: shop.name }}</title>
+    {{ content_for_header }}
+    {{ 'kyndcubs-global.css' | asset_url | stylesheet_tag }}
+  </head>
+  <body>
+    <div class="kc-gift-card" style="max-width:480px;margin:60px auto;text-align:center;padding:2rem;">
+      <h1 style="color:var(--kc-primary,#6B5FD4);">{{ shop.name }}</h1>
+      <p>{{ 'gift_cards.issued.subtext' | t }}</p>
+      <div style="font-size:2rem;font-weight:800;margin:1.5rem 0;">
+        {{ gift_card.initial_value | money_without_trailing_zeros }}
+      </div>
+      <p style="letter-spacing:0.2em;font-size:1.25rem;">{{ gift_card.code | format_code }}</p>
+      {%- if gift_card.pass_url -%}
+        <a href="{{ gift_card.pass_url }}">
+          <img src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" alt="{{ 'gift_cards.issued.add_to_apple_wallet' | t }}">
+        </a>
+      {%- endif -%}
+      <p>
+        <a href="{{ shop.url }}" style="color:var(--kc-primary,#6B5FD4);">{{ 'gift_cards.issued.shop_link' | t }}</a>
+      </p>
+    </div>
+  </body>
+</html>

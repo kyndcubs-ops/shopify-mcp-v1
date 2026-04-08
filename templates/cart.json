@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "cart": {
+      "type": "kc-cart-page-v2",
+      "settings": {}
+    }
+  },
+  "order": ["cart"]
+}

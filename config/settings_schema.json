@@ -1,0 +1,92 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "KyndCubs",
+    "theme_version": "4.0.0",
+    "theme_author": "KyndCubs",
+    "theme_documentation_url": "https://kyndcubs.com",
+    "theme_support_url": "https://kyndcubs.com"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary color",
+        "default": "#6B5FD4"
+      },
+      {
+        "type": "color",
+        "id": "color_primary_bg",
+        "label": "Primary background",
+        "default": "#F0EDFF"
+      },
+      {
+        "type": "color",
+        "id": "color_page_bg",
+        "label": "Page background",
+        "default": "#FBF8F4"
+      },
+      {
+        "type": "color",
+        "id": "color_ink",
+        "label": "Text color",
+        "default": "#2C2A3A"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "label": "Heading font",
+        "default": "nunito_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "label": "Body font",
+        "default": "nunito_n4"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon image",
+        "info": "Will be scaled down to 32 x 32px"
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "url",
+        "id": "social_instagram_link",
+        "label": "Instagram"
+      },
+      {
+        "type": "url",
+        "id": "social_facebook_link",
+        "label": "Facebook"
+      },
+      {
+        "type": "url",
+        "id": "social_youtube_link",
+        "label": "YouTube"
+      },
+      {
+        "type": "url",
+        "id": "social_whatsapp_link",
+        "label": "WhatsApp"
+      }
+    ]
+  }
+]

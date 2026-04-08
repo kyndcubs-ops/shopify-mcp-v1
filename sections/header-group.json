@@ -1,0 +1,15 @@
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "announcement-bar": {
+      "type": "kc-announcement-bar-v2",
+      "settings": {
+        "message_1": "🚚 Free delivery above ₹499 · Pan-India",
+        "message_2": "⭐ Trusted by 10,000+ Indian parents",
+        "message_3": "🎁 Curated for ages 1–8"
+      }
+    }
+  },
+  "order": ["announcement-bar"]
+}
