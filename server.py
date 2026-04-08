@@ -930,6 +930,627 @@ async def shopify_create_webhook(params: CreateWebhookInput) -> str:
         return _error(e)
 
 
+# ═══════════════════════════════════════════════════════════════════════════
+# WEBSITE GENERATION — CRO-OPTIMIZED THEME FROM STORE IDEA
+# ═══════════════════════════════════════════════════════════════════════════
+
+# --- colour-palette presets by niche -----------------------------------
+_NICHE_PALETTES: Dict[str, Dict[str, str]] = {
+    "kids": {
+        "color_primary": "#6B5FD4", "color_primary_bg": "#F0EDFF",
+        "color_page_bg": "#FBF8F4", "color_ink": "#2C2A3A",
+    },
+    "fashion": {
+        "color_primary": "#1A1A1A", "color_primary_bg": "#F5F5F5",
+        "color_page_bg": "#FFFFFF", "color_ink": "#1A1A1A",
+    },
+    "beauty": {
+        "color_primary": "#D4698B", "color_primary_bg": "#FFF0F5",
+        "color_page_bg": "#FFFAF8", "color_ink": "#2E2E2E",
+    },
+    "food": {
+        "color_primary": "#4A7C6F", "color_primary_bg": "#E8F4F0",
+        "color_page_bg": "#FFFDF7", "color_ink": "#2C2A3A",
+    },
+    "electronics": {
+        "color_primary": "#2563EB", "color_primary_bg": "#EFF6FF",
+        "color_page_bg": "#F8FAFC", "color_ink": "#1E293B",
+    },
+    "health": {
+        "color_primary": "#059669", "color_primary_bg": "#ECFDF5",
+        "color_page_bg": "#F0FDF4", "color_ink": "#1E293B",
+    },
+    "home": {
+        "color_primary": "#92400E", "color_primary_bg": "#FEF3C7",
+        "color_page_bg": "#FFFBEB", "color_ink": "#292524",
+    },
+    "pets": {
+        "color_primary": "#F59E0B", "color_primary_bg": "#FEF9C3",
+        "color_page_bg": "#FFFBEB", "color_ink": "#292524",
+    },
+    "default": {
+        "color_primary": "#6B5FD4", "color_primary_bg": "#F0EDFF",
+        "color_page_bg": "#FBF8F4", "color_ink": "#2C2A3A",
+    },
+}
+
+
+def _pick_palette(niche: str) -> Dict[str, str]:
+    """Return the best colour palette for a given niche keyword."""
+    niche_lower = niche.lower()
+    for key in _NICHE_PALETTES:
+        if key in niche_lower:
+            return _NICHE_PALETTES[key]
+    return _NICHE_PALETTES["default"]
+
+
+def _currency_symbol(currency: str) -> str:
+    symbols: Dict[str, str] = {
+        "INR": "₹", "USD": "$", "EUR": "€", "GBP": "£",
+        "AUD": "A$", "CAD": "C$", "JPY": "¥", "CNY": "¥",
+        "AED": "AED ", "SGD": "S$",
+    }
+    return symbols.get(currency.upper(), currency.upper() + " ")
+
+
+def _generate_theme(
+    store_name: str,
+    store_idea: str,
+    niche: str,
+    target_audience: str,
+    currency: str,
+    country: str,
+    free_shipping_threshold: str,
+    whatsapp_number: str,
+    unique_selling_points: List[str],
+    brand_story: str,
+    tagline: str,
+    hero_headline: str,
+    primary_collection: str,
+) -> Dict[str, Any]:
+    """Build a full CRO-optimised Shopify theme configuration from store info.
+
+    Returns a dict with keys for every theme file that needs to be created or
+    updated.  Every section is fully linked, conversion-rate-optimised, and
+    uses Shopify default features where appropriate.
+    """
+    sym = _currency_symbol(currency)
+    palette = _pick_palette(niche)
+
+    # --- Derived copy --------------------------------------------------
+    usp1 = unique_selling_points[0] if len(unique_selling_points) > 0 else "Premium quality"
+    usp2 = unique_selling_points[1] if len(unique_selling_points) > 1 else "Fast shipping"
+    usp3 = unique_selling_points[2] if len(unique_selling_points) > 2 else "Easy returns"
+
+    announcement_1 = f"🚚 Free delivery above {sym}{free_shipping_threshold} · {country}-wide"
+    announcement_2 = f"⭐ Trusted by 10,000+ happy customers"
+    announcement_3 = f"🎁 {usp1}"
+
+    wa_link = f"https://wa.me/{whatsapp_number.lstrip('+').replace(' ', '').replace('-', '')}" if whatsapp_number else ""
+
+    # --- config/settings_data.json -------------------------------------
+    settings_data = {
+        "current": {
+            **palette,
+            "type_header_font": "nunito_n4",
+            "type_body_font": "nunito_n4",
+        },
+        "presets": {},
+    }
+
+    # --- sections/header-group.json ------------------------------------
+    header_group = {
+        "type": "header",
+        "name": "Header",
+        "sections": {
+            "announcement-bar": {
+                "type": "kc-announcement-bar-v2",
+                "settings": {
+                    "message_1": announcement_1,
+                    "message_2": announcement_2,
+                    "message_3": announcement_3,
+                },
+            }
+        },
+        "order": ["announcement-bar"],
+    }
+
+    # --- sections/footer-group.json ------------------------------------
+    footer_group = {
+        "type": "footer",
+        "name": "Footer",
+        "sections": {
+            "footer": {
+                "type": "kc-footer-v2",
+                "settings": {},
+            }
+        },
+        "order": ["footer"],
+    }
+
+    # --- templates/index.json ------------------------------------------
+    index_template = {
+        "sections": {
+            "announcement-bar": {
+                "type": "kc-announcement-bar-v2",
+                "settings": {
+                    "message_1": announcement_1,
+                    "message_2": announcement_2,
+                    "message_3": announcement_3,
+                },
+            },
+            "hero": {
+                "type": "kc-hero-v2",
+                "settings": {
+                    "headline": hero_headline,
+                    "subheading": tagline,
+                    "cta1_text": f"Shop now →",
+                    "cta1_url": f"/collections/{primary_collection}",
+                    "cta2_text": "Browse all",
+                    "cta2_url": "/collections/all",
+                    "proof1": "10,000+ happy customers",
+                    "proof2": usp1,
+                    "proof3": f"Free shipping above {sym}{free_shipping_threshold}",
+                },
+            },
+            "best-sellers": {
+                "type": "kc-best-sellers-v2",
+                "settings": {
+                    "heading": "Our best sellers",
+                    "collection": primary_collection or "frontpage",
+                    "products_to_show": 8,
+                },
+            },
+            "brand-story": {
+                "type": "kc-brand-story-v2",
+                "settings": {
+                    "heading": f"The {store_name} story",
+                    "body_text": f"<p>{brand_story}</p>",
+                },
+            },
+            "ugc-gallery": {
+                "type": "kc-ugc-gallery-v2",
+                "settings": {
+                    "heading": "Loved by real customers",
+                    "subheading": "See what people are saying",
+                },
+            },
+            "trust-strip": {
+                "type": "kc-trust-strip-v2",
+                "settings": {},
+            },
+            "email-signup": {
+                "type": "kc-email-signup-v2",
+                "settings": {
+                    "heading": f"Get {sym}100 off your first order",
+                    "subheading": f"Join thousands of happy customers getting updates from {store_name}.",
+                    "placeholder": "Enter your email address",
+                    "button_text": f"Claim {sym}100 off",
+                    "privacy_note": "No spam. Unsubscribe anytime.",
+                },
+            },
+        },
+        "order": [
+            "announcement-bar",
+            "hero",
+            "best-sellers",
+            "brand-story",
+            "ugc-gallery",
+            "trust-strip",
+            "email-signup",
+        ],
+    }
+
+    # --- templates/product.json ----------------------------------------
+    product_hooks = [
+        f'"Love this product — exactly what I needed!" — Happy Customer',
+        f'"Best purchase I\'ve made this year." — Verified Buyer',
+        f'"Amazing quality. Will order again!" — Repeat Customer',
+        f'"{usp1} — totally worth it." — Reviewer',
+        f'"Arrived fast and beautifully packaged!" — 5-Star Review',
+        f'"{usp2} — highly recommend {store_name}." — Loyal Customer',
+        f'"Worth every penny." — Top Reviewer',
+        f'"Finally found what I was looking for!" — New Customer',
+    ]
+
+    product_template = {
+        "sections": {
+            "gallery": {
+                "type": "kcp-gallery-v4",
+                "settings": {},
+            },
+            "product-info": {
+                "type": "kcp-product-info-v4",
+                "settings": {
+                    **{f"hook_{i+1}": hook for i, hook in enumerate(product_hooks)},
+                },
+            },
+            "action-zone": {
+                "type": "kcp-action-zone-v4",
+                "settings": {},
+            },
+            "offers": {
+                "type": "kcp-offers-v4",
+                "settings": {},
+            },
+            "video-grid": {
+                "type": "kcp-video-grid-v4",
+                "settings": {},
+            },
+            "product-tabs": {
+                "type": "kcp-product-tabs-v4",
+                "settings": {},
+            },
+            "why-parents": {
+                "type": "kcp-why-parents-v4",
+                "settings": {},
+            },
+            "reviews": {
+                "type": "kcp-reviews-v4",
+                "settings": {},
+            },
+            "faq": {
+                "type": "kcp-faq-v4",
+                "settings": {},
+            },
+            "policy-grid": {
+                "type": "kcp-policy-grid-v4",
+                "settings": {},
+            },
+            "sticky-atc": {
+                "type": "kcp-sticky-atc-v4",
+                "settings": {},
+            },
+            "floating-wa": {
+                "type": "kcp-floating-wa-v4",
+                "settings": {},
+            },
+        },
+        "order": [
+            "gallery",
+            "product-info",
+            "action-zone",
+            "offers",
+            "video-grid",
+            "product-tabs",
+            "why-parents",
+            "reviews",
+            "faq",
+            "policy-grid",
+            "sticky-atc",
+            "floating-wa",
+        ],
+    }
+
+    # --- Shopify-default templates ------------------------------------
+    default_templates = {
+        "templates/404.json": {
+            "sections": {"main": {"type": "main-404", "settings": {}}},
+            "order": ["main"],
+        },
+        "templates/article.json": {
+            "sections": {"main": {"type": "main-article", "settings": {}}},
+            "order": ["main"],
+        },
+        "templates/blog.json": {
+            "sections": {"main": {"type": "main-blog", "settings": {}}},
+            "order": ["main"],
+        },
+        "templates/cart.json": {
+            "sections": {"cart": {"type": "kc-cart-page-v2", "settings": {}}},
+            "order": ["cart"],
+        },
+        "templates/collection.json": {
+            "sections": {"main": {"type": "main-collection", "settings": {}}},
+            "order": ["main"],
+        },
+        "templates/page.json": {
+            "sections": {"main": {"type": "main-page", "settings": {}}},
+            "order": ["main"],
+        },
+        "templates/password.json": {
+            "sections": {
+                "main": {"type": "main-password-header", "settings": {}},
+                "footer": {"type": "main-password-footer", "settings": {}},
+            },
+            "order": ["main", "footer"],
+        },
+        "templates/search.json": {
+            "sections": {"main": {"type": "main-search", "settings": {}}},
+            "order": ["main"],
+        },
+    }
+
+    # --- Full output ---------------------------------------------------
+    return {
+        "store_name": store_name,
+        "store_idea": store_idea,
+        "niche": niche,
+        "cro_features": [
+            "Rotating announcement bar with free-shipping & social-proof messages",
+            "Hero section with primary CTA, secondary CTA, and proof strip",
+            "Best-sellers carousel with quick-add-to-cart (zero-page-reload)",
+            "Brand story section for emotional connection",
+            "UGC / social-proof gallery",
+            "Trust badge strip (safety, delivery, returns, COD)",
+            "Email capture with first-order discount incentive",
+            "Product page: rotating review hooks, urgency badges, sold-count social proof",
+            "Product page: EMI breakdown for high-ticket items",
+            "Sticky add-to-cart bar on product pages",
+            "Floating WhatsApp button for instant support",
+            "FAQ accordion to reduce purchase hesitation",
+            "Policy grid (shipping, returns, warranty) on product page",
+        ],
+        "files": {
+            "config/settings_data.json": settings_data,
+            "sections/header-group.json": header_group,
+            "sections/footer-group.json": footer_group,
+            "templates/index.json": index_template,
+            "templates/product.json": product_template,
+            **default_templates,
+        },
+        "whatsapp_link": wa_link,
+        "instructions": (
+            "1. Use shopify_apply_theme to push these files to your active theme.\n"
+            "2. Customise images via the Shopify Theme Editor → each section has an image_picker setting.\n"
+            "3. Create collections matching your primary_collection handle.\n"
+            "4. Add products with tags 'best-seller' to populate the best-sellers section.\n"
+            "5. Set product metafields (custom.review_score, custom.review_count, custom.sold_count) for social proof.\n"
+            "6. Update social media links in Theme Settings → Social Media."
+        ),
+    }
+
+
+class GenerateWebsiteInput(BaseModel):
+    """Input for the website-generation tool."""
+    model_config = ConfigDict(str_strip_whitespace=True, extra="forbid")
+
+    store_name: str = Field(
+        ..., min_length=1,
+        description="Store / brand name, e.g. 'Kynd Cubs'",
+    )
+    store_idea: str = Field(
+        ..., min_length=5,
+        description=(
+            "Brief description of the store concept, e.g. "
+            "'Curated educational toys for Indian kids aged 1-8'"
+        ),
+    )
+    niche: str = Field(
+        default="default",
+        description=(
+            "Product niche for colour-palette selection. "
+            "Options: kids, fashion, beauty, food, electronics, health, home, pets, default"
+        ),
+    )
+    target_audience: str = Field(
+        default="general consumers",
+        description="Who this store is for, e.g. 'Indian parents of toddlers'",
+    )
+    currency: str = Field(
+        default="INR",
+        description="ISO 4217 currency code, e.g. INR, USD, EUR",
+    )
+    country: str = Field(
+        default="India",
+        description="Primary country for shipping copy",
+    )
+    free_shipping_threshold: str = Field(
+        default="499",
+        description="Minimum order value for free shipping (number only)",
+    )
+    whatsapp_number: str = Field(
+        default="",
+        description="WhatsApp number with country code, e.g. +917509802310",
+    )
+    unique_selling_points: Optional[List[str]] = Field(
+        default=None,
+        description="Up to 3 USPs, e.g. ['Safety tested', 'Pan-India delivery', 'Easy returns']",
+    )
+    brand_story: str = Field(
+        default="",
+        description="1-3 sentence brand story for the homepage",
+    )
+    tagline: str = Field(
+        default="",
+        description="Store tagline / subheading for the hero section",
+    )
+    hero_headline: str = Field(
+        default="",
+        description=(
+            "Hero banner headline. Use [em]...[/em] for emphasis. "
+            "e.g. 'Toys your child [em]won't ignore[/em]'"
+        ),
+    )
+    primary_collection: str = Field(
+        default="frontpage",
+        description="Handle of the main collection to feature, e.g. 'frontpage' or 'best-sellers'",
+    )
+
+
+@mcp.tool(
+    name="shopify_generate_website",
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    },
+)
+async def shopify_generate_website(params: GenerateWebsiteInput) -> str:
+    """Generate a complete CRO-optimised Shopify website theme from a store
+    idea and basic information.
+
+    Returns a full set of theme configuration files (templates, sections,
+    config) populated with conversion-rate-optimised copy, fully linked
+    sections, and Shopify default features.
+
+    After generation, use shopify_apply_theme to push the files to your store.
+    """
+    try:
+        usps = params.unique_selling_points or ["Premium quality", "Fast shipping", "Easy returns"]
+
+        brand_story = params.brand_story or (
+            f"{params.store_name} was built to solve a simple problem — "
+            f"finding great {params.niche} products shouldn't be hard. "
+            f"We hand-pick every item so you don't have to."
+        )
+        tagline = params.tagline or f"Curated {params.niche} products for {params.target_audience}."
+        hero_headline = params.hero_headline or f"The [em]best {params.niche}[/em] products, curated for you"
+
+        result = _generate_theme(
+            store_name=params.store_name,
+            store_idea=params.store_idea,
+            niche=params.niche,
+            target_audience=params.target_audience,
+            currency=params.currency,
+            country=params.country,
+            free_shipping_threshold=params.free_shipping_threshold,
+            whatsapp_number=params.whatsapp_number,
+            unique_selling_points=usps,
+            brand_story=brand_story,
+            tagline=tagline,
+            hero_headline=hero_headline,
+            primary_collection=params.primary_collection,
+        )
+        return _fmt(result)
+    except Exception as e:
+        return _error(e)
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# THEME MANAGEMENT — PUSH GENERATED THEME TO SHOPIFY
+# ═══════════════════════════════════════════════════════════════════════════
+
+class ListThemesInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+@mcp.tool(
+    name="shopify_list_themes",
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": True,
+    },
+)
+async def shopify_list_themes(params: ListThemesInput) -> str:
+    """List all themes on the store. Use this to find the active theme ID
+    before calling shopify_apply_theme."""
+    try:
+        data = await _request("GET", "themes.json")
+        themes = data.get("themes", [])
+        return _fmt({"count": len(themes), "themes": themes})
+    except Exception as e:
+        return _error(e)
+
+
+class ApplyThemeInput(BaseModel):
+    """Push generated theme files to a Shopify theme via the Asset API."""
+    model_config = ConfigDict(extra="forbid")
+
+    theme_id: int = Field(
+        ...,
+        description=(
+            "Shopify theme ID to update. Use shopify_list_themes to find the "
+            "active theme ID."
+        ),
+    )
+    files: Dict[str, Any] = Field(
+        ...,
+        description=(
+            "Dict of file paths → JSON content from shopify_generate_website "
+            "output's 'files' key, e.g. "
+            '{"config/settings_data.json": {...}, "templates/index.json": {...}}'
+        ),
+    )
+
+
+@mcp.tool(
+    name="shopify_apply_theme",
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": True,
+    },
+)
+async def shopify_apply_theme(params: ApplyThemeInput) -> str:
+    """Push theme files to a Shopify theme using the Asset API.
+
+    Takes the 'files' dict from shopify_generate_website output and uploads
+    each file as a theme asset.  Use shopify_list_themes first to find the
+    correct theme_id.
+    """
+    try:
+        results: List[Dict[str, str]] = []
+        for file_path, content in params.files.items():
+            asset_key = file_path
+            asset_value = json.dumps(content, indent=2, ensure_ascii=False)
+            body = {
+                "asset": {
+                    "key": asset_key,
+                    "value": asset_value,
+                }
+            }
+            try:
+                await _request(
+                    "PUT",
+                    f"themes/{params.theme_id}/assets.json",
+                    body=body,
+                )
+                results.append({"file": asset_key, "status": "uploaded"})
+                logger.info(f"Uploaded theme asset: {asset_key}")
+            except Exception as file_err:
+                results.append({"file": asset_key, "status": "failed", "error": str(file_err)})
+                logger.error(f"Failed to upload {asset_key}: {file_err}")
+
+        uploaded = sum(1 for r in results if r["status"] == "uploaded")
+        failed = sum(1 for r in results if r["status"] == "failed")
+        return _fmt({
+            "theme_id": params.theme_id,
+            "total_files": len(results),
+            "uploaded": uploaded,
+            "failed": failed,
+            "details": results,
+        })
+    except Exception as e:
+        return _error(e)
+
+
+class GetThemeAssetInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    theme_id: int = Field(..., description="Shopify theme ID")
+    asset_key: str = Field(
+        ...,
+        description="Asset key / file path, e.g. 'templates/index.json'",
+    )
+
+
+@mcp.tool(
+    name="shopify_get_theme_asset",
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": True,
+    },
+)
+async def shopify_get_theme_asset(params: GetThemeAssetInput) -> str:
+    """Read a single asset from a Shopify theme. Useful for inspecting
+    current theme files before applying changes."""
+    try:
+        data = await _request(
+            "GET",
+            f"themes/{params.theme_id}/assets.json",
+            params={"asset[key]": params.asset_key, "theme_id": params.theme_id},
+        )
+        return _fmt(data.get("asset", data))
+    except Exception as e:
+        return _error(e)
+
+
 # ---------------------------------------------------------------------------
 # Entrypoint
 # ---------------------------------------------------------------------------
