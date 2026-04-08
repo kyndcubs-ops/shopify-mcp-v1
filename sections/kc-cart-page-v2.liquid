@@ -2,7 +2,8 @@
   assign free_threshold = section.settings.free_shipping_threshold
   assign wa_num = section.settings.wa_number
   assign wa_msg = 'Hi! I need help with my order.'
-  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg | url_encode
+  assign wa_msg_enc = wa_msg | url_encode
+  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg_enc
   assign cart_total = cart.total_price
   assign remaining = free_threshold | times: 100 | minus: cart_total
   assign progress_pct = cart_total | times: 100 | divided_by: free_threshold | divided_by: 100

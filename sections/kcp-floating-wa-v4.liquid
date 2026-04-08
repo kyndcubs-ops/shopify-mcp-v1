@@ -1,7 +1,8 @@
 {%- liquid
   assign wa_num = section.settings.wa_number
   assign wa_msg = 'Hi! I have a question about ' | append: product.title
-  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg | url_encode
+  assign wa_msg_enc = wa_msg | url_encode
+  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg_enc
 -%}
 <div id="shopify-section-{{ section.id }}" class="kcp-floating-wa">
   <a href="{{ wa_link }}" target="_blank" rel="noopener" class="kcp-fwa__btn" aria-label="Chat on WhatsApp">
