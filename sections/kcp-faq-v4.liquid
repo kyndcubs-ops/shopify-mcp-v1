@@ -1,7 +1,7 @@
 {%- liquid
   assign wa_num = section.settings.wa_number
-  assign wa_msg = 'Hi! I have a question about ' | append: product.title
-  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg | url_encode
+  assign wa_msg = 'Hi! I have a question about ' | append: product.title | url_encode
+  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg
 -%}
 <div id="shopify-section-{{ section.id }}" class="kcp-faq">
   <h2 class="kcp-faq__heading">{{ section.settings.heading }}</h2>
