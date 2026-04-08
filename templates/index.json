@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "announcement-bar": {
@@ -10,7 +19,17 @@
     },
     "hero": {
       "type": "kc-hero-v2",
-      "settings": {}
+      "settings": {
+        "headline": "Toys your child [em]won't ignore[/em]",
+        "subheading": "Handpicked by parents. Tested by real Indian families.",
+        "cta1_text": "Shop curated toys →",
+        "cta1_url": "",
+        "cta2_text": "Browse by age",
+        "cta2_url": "",
+        "proof1": "2,000+ families",
+        "proof2": "Safety tested",
+        "proof3": "Pan-India delivery"
+      }
     },
     "age-nav": {
       "type": "kc-age-nav-v2",
@@ -18,19 +37,31 @@
     },
     "best-sellers": {
       "type": "kc-best-sellers-v2",
-      "settings": {}
+      "settings": {
+        "heading": "Our best sellers",
+        "collection": "frontpage",
+        "products_to_show": 8
+      }
     },
     "shop-by-age": {
       "type": "kc-shop-by-age-v2",
-      "settings": {}
+      "settings": {
+        "heading": "Shop by age"
+      }
     },
     "brand-story": {
       "type": "kc-brand-story-v2",
-      "settings": {}
+      "settings": {
+        "heading": "We're parents too.",
+        "body_text": "<p>We got tired of toys abandoned in 3 days. We built Kynd Cubs to fix that — handpicking only the toys that genuinely hold a child's attention, build real skills, and are safe for Indian homes.</p>"
+      }
     },
     "ugc-gallery": {
       "type": "kc-ugc-gallery-v2",
-      "settings": {}
+      "settings": {
+        "heading": "Loved by real families",
+        "subheading": "Parents across India are sharing their joy"
+      }
     },
     "trust-strip": {
       "type": "kc-trust-strip-v2",
@@ -38,7 +69,13 @@
     },
     "email-signup": {
       "type": "kc-email-signup-v2",
-      "settings": {}
+      "settings": {
+        "heading": "Get ₹100 off your first order",
+        "subheading": "Join 2,000+ parents getting curated toy recommendations.",
+        "placeholder": "Enter your email address",
+        "button_text": "Claim ₹100 off",
+        "privacy_note": "No spam. Unsubscribe anytime."
+      }
     }
   },
   "order": [
