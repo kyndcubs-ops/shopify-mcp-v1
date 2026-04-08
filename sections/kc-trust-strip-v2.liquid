@@ -1,0 +1,113 @@
+<div id="shopify-section-{{ section.id }}" class="kc-trust-strip">
+  <div class="kc-trust-strip__inner">
+    {%- for block in section.blocks -%}
+      <div class="kc-trust-strip__item" {{ block.shopify_attributes }}>
+        <span class="kc-trust-strip__icon">{{ block.settings.icon }}</span>
+        <div class="kc-trust-strip__text">
+          <span class="kc-trust-strip__title">{{ block.settings.title }}</span>
+          <span class="kc-trust-strip__subtitle">{{ block.settings.subtitle }}</span>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-trust-strip {
+    background-color: #FFFFFF;
+    border-top: 1.5px solid #EDE8E0;
+    border-bottom: 1.5px solid #EDE8E0;
+    padding: 20px 16px;
+  }
+  #shopify-section-{{ section.id }} .kc-trust-strip__inner {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    justify-content: flex-start;
+  }
+  #shopify-section-{{ section.id }} .kc-trust-strip__inner::-webkit-scrollbar { display: none; }
+  #shopify-section-{{ section.id }} .kc-trust-strip__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    min-width: 160px;
+  }
+  #shopify-section-{{ section.id }} .kc-trust-strip__icon {
+    font-size: 24px;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .kc-trust-strip__text {
+    display: flex;
+    flex-direction: column;
+  }
+  #shopify-section-{{ section.id }} .kc-trust-strip__title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: #2C2A3A;
+  }
+  #shopify-section-{{ section.id }} .kc-trust-strip__subtitle {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    color: #7A7890;
+    font-weight: 400;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-trust-strip { padding: 24px 40px; }
+    #shopify-section-{{ section.id }} .kc-trust-strip__inner {
+      justify-content: center;
+      flex-wrap: wrap;
+      overflow-x: visible;
+      gap: 32px;
+    }
+    #shopify-section-{{ section.id }} .kc-trust-strip__item { min-width: auto; }
+    #shopify-section-{{ section.id }} .kc-trust-strip__title { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kc-trust-strip__subtitle { font-size: 13px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Trust Strip",
+  "blocks": [
+    {
+      "type": "trust_item",
+      "name": "Trust Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (emoji)",
+          "default": "✅"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Safety tested"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "EN71 certified toys"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust Strip",
+      "blocks": [
+        { "type": "trust_item", "settings": { "icon": "✅", "title": "Safety tested", "subtitle": "EN71 certified toys" } },
+        { "type": "trust_item", "settings": { "icon": "🚚", "title": "Fast delivery", "subtitle": "2–3 business days" } },
+        { "type": "trust_item", "settings": { "icon": "↩️", "title": "Easy returns", "subtitle": "7-day hassle-free" } },
+        { "type": "trust_item", "settings": { "icon": "💵", "title": "COD available", "subtitle": "Pay on delivery" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

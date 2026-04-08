@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
+
+:root {
+  --kc-primary: #6B5FD4;
+  --kc-primary-hover: #4A3FB8;
+  --kc-primary-bg: #F0EDFF;
+  --kc-primary-border: #DDD8FF;
+  --kc-ink: #2C2A3A;
+  --kc-slate: #7A7890;
+  --kc-sage: #4A7C6F;
+  --kc-sage-light: #E8F4F0;
+  --kc-coral: #D4687A;
+  --kc-coral-light: #FFF0F3;
+  --kc-sunshine: #E8C14A;
+  --kc-whatsapp: #25D366;
+  --kc-whatsapp-dark: #128C7E;
+  --kc-page-bg: #FBF8F4;
+  --kc-alt-bg: #F0EBE3;
+  --kc-mint-bg: #E8F4F0;
+  --kc-white: #FFFFFF;
+  --kc-border: #EDE8E0;
+  --kc-header-height: 80px; /* update if your theme header height differs */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--kc-page-bg);
+  color: var(--kc-ink);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Buttons */
+.kc-btn-primary,
+.kc-btn-secondary,
+.kc-btn-dark,
+.kc-btn-wa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 99px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 900;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+.kc-btn-primary:active,
+.kc-btn-secondary:active,
+.kc-btn-dark:active,
+.kc-btn-wa:active { transform: scale(0.97); }
+
+.kc-btn-primary { background-color: var(--kc-primary); color: var(--kc-white); }
+.kc-btn-primary:hover { background-color: var(--kc-primary-hover); color: var(--kc-white); }
+
+.kc-btn-secondary {
+  background-color: transparent;
+  color: var(--kc-primary);
+  border: 2.5px solid var(--kc-primary);
+}
+.kc-btn-secondary:hover { background-color: var(--kc-primary-bg); }
+
+.kc-btn-dark { background-color: var(--kc-ink); color: var(--kc-white); }
+.kc-btn-dark:hover { background-color: #1a1828; color: var(--kc-white); }
+
+.kc-btn-wa { background-color: var(--kc-whatsapp); color: var(--kc-white); }
+.kc-btn-wa:hover { background-color: var(--kc-whatsapp-dark); color: var(--kc-white); }
+
+/* Utilities */
+.kc-pill { border-radius: 99px; }
+.kc-card {
+  border-radius: 16px;
+  border: 1.5px solid var(--kc-border);
+  background-color: var(--kc-white);
+}
+
+.kc-section-padding { padding: 24px 16px; }
+@media (min-width: 768px) { .kc-section-padding { padding: 48px 40px; } }
+@media (min-width: 1024px) { .kc-section-padding { padding: 64px 60px; } }
+@media (min-width: 1280px) { .kc-section-padding { padding: 72px 80px; } }
+
+/* Text colour utilities */
+.kc-text-primary { color: var(--kc-primary); }
+.kc-text-ink { color: var(--kc-ink); }
+.kc-text-slate { color: var(--kc-slate); }
+.kc-text-sage { color: var(--kc-sage); }
+.kc-text-coral { color: var(--kc-coral); }
+.kc-text-sunshine { color: var(--kc-sunshine); }
+.kc-text-white { color: var(--kc-white); }
+
+/* Background utilities */
+.kc-bg-primary { background-color: var(--kc-primary); }
+.kc-bg-primary-light { background-color: var(--kc-primary-bg); }
+.kc-bg-ink { background-color: var(--kc-ink); }
+.kc-bg-page { background-color: var(--kc-page-bg); }
+.kc-bg-alt { background-color: var(--kc-alt-bg); }
+.kc-bg-mint { background-color: var(--kc-mint-bg); }
+.kc-bg-white { background-color: var(--kc-white); }
+.kc-bg-coral-light { background-color: var(--kc-coral-light); }
+.kc-bg-sage-light { background-color: var(--kc-sage-light); }
+
+/* =============================================================
+   DESKTOP OPTIMISATION (≥ 900 px)
+   ============================================================= */
+
+/* ── Product page: two-column layout ─────────────────────────
+   Gallery floats left; Product Info / Action Zone / Offers
+   float right; everything below clears both floats.
+   Section IDs come from templates/product.kyndcubs.json keys.
+   ------------------------------------------------------------ */
+@media (min-width: 900px) {
+  /* Left column – sticky gallery */
+  #shopify-section-gallery {
+    float: left;
+    width: 46%;
+    padding: 32px 16px 32px 40px;
+    box-sizing: border-box;
+  }
+
+  /* Right column – product info stack */
+  #shopify-section-product-info {
+    float: right;
+    width: 54%;
+    padding: 32px 40px 0 0;
+    box-sizing: border-box;
+  }
+  #shopify-section-action-zone,
+  #shopify-section-offers {
+    float: right;
+    width: 54%;
+    padding: 0 40px 0 0;
+    box-sizing: border-box;
+  }
+
+  /* Clear floats: everything below is full-width */
+  #shopify-section-video-grid,
+  #shopify-section-product-tabs,
+  #shopify-section-why-parents,
+  #shopify-section-reviews,
+  #shopify-section-faq,
+  #shopify-section-policy-grid,
+  #shopify-section-sticky-atc,
+  #shopify-section-floating-wa { clear: both; }
+
+  /* Override the gallery inner fixed 480 px width */
+  #shopify-section-gallery .kcp-gallery {
+    width: 100% !important;
+    position: sticky;
+    top: var(--kc-header-height, 80px);
+    flex-shrink: unset;
+  }
+
+  /* Full-width section inner containers: centred with max-width */
+  #shopify-section-video-grid .kcp-video-grid,
+  #shopify-section-product-tabs .kcp-tabs,
+  #shopify-section-why-parents .kcp-why-parents,
+  #shopify-section-reviews .kcp-reviews,
+  #shopify-section-faq .kcp-faq,
+  #shopify-section-policy-grid .kcp-policy-grid {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-sizing: border-box;
+  }
+}
+
+/* ── Large-screen edge padding (1280 px +) ───────────────────
+   Keeps the two-column product area from stretching past 1280 px
+   ------------------------------------------------------------ */
+@media (min-width: 1280px) {
+  #shopify-section-gallery {
+    width: 44%;
+    padding-left: max(40px, calc((100vw - 1280px) / 2 + 40px));
+  }
+  #shopify-section-product-info,
+  #shopify-section-action-zone,
+  #shopify-section-offers {
+    width: 56%;
+    padding-right: max(40px, calc((100vw - 1280px) / 2 + 40px));
+  }
+}
+
+/* ── Homepage / shared sections: max-width ────────────────── */
+@media (min-width: 1024px) {
+  .kc-best-sellers__inner,
+  .kc-shop-by-age__inner,
+  .kc-ugc__inner,
+  .kc-footer__inner { max-width: 1280px; }
+}

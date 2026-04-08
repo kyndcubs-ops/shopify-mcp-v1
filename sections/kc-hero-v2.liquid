@@ -1,0 +1,213 @@
+{%- liquid
+  assign headline = section.settings.headline
+  assign subheading = section.settings.subheading
+  assign cta1_text = section.settings.cta1_text
+  assign cta1_url = section.settings.cta1_url
+  assign cta2_text = section.settings.cta2_text
+  assign cta2_url = section.settings.cta2_url
+  assign proof1 = section.settings.proof1
+  assign proof2 = section.settings.proof2
+  assign proof3 = section.settings.proof3
+  assign bg_image = section.settings.bg_image
+-%}
+<div id="shopify-section-{{ section.id }}" class="kc-hero{% if bg_image != blank %} kc-hero--has-bg{% endif %}">
+  {%- if bg_image != blank -%}
+    <div class="kc-hero__bg">
+      <img src="{{ bg_image | image_url: width: 1200 }}" alt="Hero background" width="1200" height="600" loading="lazy">
+    </div>
+  {%- endif -%}
+  <div class="kc-hero__overlay"></div>
+  <div class="kc-hero__content">
+    <h1 class="kc-hero__headline">
+      {%- assign parts = headline | split: '[em]' -%}
+      {%- for part in parts -%}
+        {%- unless forloop.first -%}
+          {%- assign inner_parts = part | split: '[/em]' -%}
+          <em class="kc-hero__em">{{ inner_parts[0] }}</em>
+          {%- if inner_parts.size > 1 -%}{{ inner_parts[1] }}{%- endif -%}
+        {%- else -%}
+          {{ part }}
+        {%- endunless -%}
+      {%- endfor -%}
+    </h1>
+    <p class="kc-hero__subheading">{{ subheading }}</p>
+    <div class="kc-hero__ctas">
+      {%- if cta1_text != blank -%}
+        <a href="{{ cta1_url }}" class="kc-btn-primary kc-hero__cta1">{{ cta1_text }}</a>
+      {%- endif -%}
+      {%- if cta2_text != blank -%}
+        <a href="{{ cta2_url }}" class="kc-btn-secondary kc-hero__cta2">{{ cta2_text }}</a>
+      {%- endif -%}
+    </div>
+    <div class="kc-hero__proof">
+      {%- if proof1 != blank -%}<span class="kc-hero__proof-item">{{ proof1 }}</span>{%- endif -%}
+      {%- if proof2 != blank -%}<span class="kc-hero__proof-sep">·</span><span class="kc-hero__proof-item">{{ proof2 }}</span>{%- endif -%}
+      {%- if proof3 != blank -%}<span class="kc-hero__proof-sep">·</span><span class="kc-hero__proof-item">{{ proof3 }}</span>{%- endif -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-hero {
+    position: relative;
+    background-color: #F0EDFF;
+    padding: 48px 16px 40px;
+    text-align: center;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .kc-hero--has-bg { background-color: #2C2A3A; }
+  #shopify-section-{{ section.id }} .kc-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  #shopify-section-{{ section.id }} .kc-hero__bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .kc-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(44,42,58,0.45);
+    z-index: 1;
+    pointer-events: none;
+  }
+  #shopify-section-{{ section.id }} .kc-hero--has-bg .kc-hero__overlay { display: block; }
+  #shopify-section-{{ section.id }} .kc-hero:not(.kc-hero--has-bg) .kc-hero__overlay { display: none; }
+  #shopify-section-{{ section.id }} .kc-hero__content {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .kc-hero__headline {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 32px;
+    line-height: 1.2;
+    color: #2C2A3A;
+    margin-bottom: 14px;
+  }
+  #shopify-section-{{ section.id }} .kc-hero--has-bg .kc-hero__headline { color: #FFFFFF; }
+  #shopify-section-{{ section.id }} .kc-hero__em {
+    color: #6B5FD4;
+    font-style: normal;
+  }
+  #shopify-section-{{ section.id }} .kc-hero--has-bg .kc-hero__em { color: #DDD8FF; }
+  #shopify-section-{{ section.id }} .kc-hero__subheading {
+    font-size: 16px;
+    color: #7A7890;
+    margin-bottom: 28px;
+    font-weight: 700;
+  }
+  #shopify-section-{{ section.id }} .kc-hero--has-bg .kc-hero__subheading { color: #EDE8E0; }
+  #shopify-section-{{ section.id }} .kc-hero__ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 28px;
+  }
+  #shopify-section-{{ section.id }} .kc-hero__proof {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #7A7890;
+  }
+  #shopify-section-{{ section.id }} .kc-hero--has-bg .kc-hero__proof { color: #EDE8E0; }
+  #shopify-section-{{ section.id }} .kc-hero__proof-sep { color: #DDD8FF; }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-hero {
+      padding: 80px 40px 72px;
+    }
+    #shopify-section-{{ section.id }} .kc-hero__headline { font-size: 52px; }
+    #shopify-section-{{ section.id }} .kc-hero__subheading { font-size: 18px; }
+    #shopify-section-{{ section.id }} .kc-hero__ctas {
+      flex-direction: row;
+      justify-content: center;
+    }
+    #shopify-section-{{ section.id }} .kc-hero__proof { font-size: 14px; }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} .kc-hero { padding: 110px 80px 96px; }
+    #shopify-section-{{ section.id }} .kc-hero__headline { font-size: 64px; }
+    #shopify-section-{{ section.id }} .kc-hero__subheading { font-size: 20px; }
+    #shopify-section-{{ section.id }} .kc-hero__content { max-width: 820px; }
+    #shopify-section-{{ section.id }} .kc-hero__proof { font-size: 15px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "headline",
+      "label": "Headline (wrap word in [em]...[/em])",
+      "default": "Toys your child [em]won't ignore[/em]"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Handpicked by parents. Tested by real Indian families."
+    },
+    {
+      "type": "text",
+      "id": "cta1_text",
+      "label": "Primary CTA text",
+      "default": "Shop curated toys →"
+    },
+    {
+      "type": "url",
+      "id": "cta1_url",
+      "label": "Primary CTA URL"
+    },
+    {
+      "type": "text",
+      "id": "cta2_text",
+      "label": "Secondary CTA text",
+      "default": "Browse by age"
+    },
+    {
+      "type": "url",
+      "id": "cta2_url",
+      "label": "Secondary CTA URL"
+    },
+    {
+      "type": "text",
+      "id": "proof1",
+      "label": "Proof item 1",
+      "default": "2,000+ families"
+    },
+    {
+      "type": "text",
+      "id": "proof2",
+      "label": "Proof item 2",
+      "default": "Safety tested"
+    },
+    {
+      "type": "text",
+      "id": "proof3",
+      "label": "Proof item 3",
+      "default": "Pan-India delivery"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Background image (optional)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner"
+    }
+  ]
+}
+{% endschema %}

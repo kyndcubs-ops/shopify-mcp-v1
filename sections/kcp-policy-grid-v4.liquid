@@ -1,0 +1,104 @@
+<div id="shopify-section-{{ section.id }}" class="kcp-policy-grid">
+  <div class="kcp-pg__grid">
+    {%- for block in section.blocks -%}
+      <div class="kcp-pg__card" {{ block.shopify_attributes }}>
+        <span class="kcp-pg__icon">{{ block.settings.icon }}</span>
+        <span class="kcp-pg__title">{{ block.settings.title }}</span>
+        <p class="kcp-pg__desc">{{ block.settings.description }}</p>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kcp-policy-grid {
+    padding: 24px 16px;
+    background-color: #FFFFFF;
+    border-top: 1.5px solid #EDE8E0;
+    font-family: 'Nunito', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kcp-pg__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  #shopify-section-{{ section.id }} .kcp-pg__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 16px 12px;
+    background-color: #FBF8F4;
+    border-radius: 14px;
+    border: 1.5px solid #EDE8E0;
+    gap: 6px;
+  }
+  #shopify-section-{{ section.id }} .kcp-pg__icon { font-size: 26px; line-height: 1; }
+  #shopify-section-{{ section.id }} .kcp-pg__title {
+    font-weight: 800;
+    font-size: 13px;
+    color: #2C2A3A;
+  }
+  #shopify-section-{{ section.id }} .kcp-pg__desc {
+    font-size: 12px;
+    color: #7A7890;
+    margin: 0;
+    line-height: 1.4;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kcp-policy-grid { padding: 28px 0; }
+    #shopify-section-{{ section.id }} .kcp-pg__grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    #shopify-section-{{ section.id }} .kcp-pg__title { font-size: 14px; }
+    #shopify-section-{{ section.id }} .kcp-pg__desc { font-size: 13px; }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} .kcp-pg__grid { gap: 24px; }
+    #shopify-section-{{ section.id }} .kcp-pg__title { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kcp-pg__desc { font-size: 14px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Policy Grid",
+  "blocks": [
+    {
+      "type": "policy_card",
+      "name": "Policy Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon (emoji)",
+          "default": "↩️"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "7-day returns"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Hassle-free returns, no questions asked."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Policy Grid",
+      "blocks": [
+        { "type": "policy_card", "settings": { "icon": "↩️", "title": "7-day returns", "description": "Hassle-free returns, no questions asked." } },
+        { "type": "policy_card", "settings": { "icon": "✅", "title": "Safety tested", "description": "EN71 & BIS certified for Indian homes." } },
+        { "type": "policy_card", "settings": { "icon": "💵", "title": "COD available", "description": "Pay cash when your order arrives." } },
+        { "type": "policy_card", "settings": { "icon": "🚚", "title": "Pan-India delivery", "description": "Delivered to every corner of India." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

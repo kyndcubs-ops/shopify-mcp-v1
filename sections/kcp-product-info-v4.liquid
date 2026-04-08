@@ -1,0 +1,323 @@
+{%- liquid
+  assign cv = product.selected_or_first_available_variant
+  assign age_range = product.metafields.custom.age_range
+  assign is_best_seller = false
+  for tag in product.tags
+    if tag == 'best-seller'
+      assign is_best_seller = true
+    endif
+  endfor
+  assign review_score = product.metafields.custom.review_score | default: '4.8'
+  assign review_count = product.metafields.custom.review_count | default: '142'
+  assign sold_count = product.metafields.custom.sold_count | default: '847'
+  assign sold_24hrs = product.metafields.custom.sold_24hrs | default: '12'
+  assign has_compare = false
+  if cv.compare_at_price > cv.price
+    assign has_compare = true
+    assign save_pct = cv.compare_at_price | minus: cv.price | times: 100 | divided_by: cv.compare_at_price
+  endif
+  assign emi_amount = cv.price | divided_by: 300
+-%}
+<div id="shopify-section-{{ section.id }}" class="kcp-product-info">
+  <div class="kcp-pi__badges">
+    {%- if age_range != blank -%}
+      <span class="kcp-pi__badge kcp-pi__badge--age">{{ age_range }}</span>
+    {%- endif -%}
+    {%- if is_best_seller -%}
+      <span class="kcp-pi__badge kcp-pi__badge--bs">⭐ Best Seller</span>
+    {%- endif -%}
+  </div>
+
+  <h1 class="kcp-pi__title">{{ product.title }}</h1>
+
+  <div class="kcp-pi__hook-wrap" id="kcHook-{{ section.id }}">
+    <div class="kcp-pi__hook kcp-pi__hook--active" data-hook-idx="0">{{ section.settings.hook_1 }}</div>
+    <div class="kcp-pi__hook" data-hook-idx="1">{{ section.settings.hook_2 }}</div>
+    <div class="kcp-pi__hook" data-hook-idx="2">{{ section.settings.hook_3 }}</div>
+    <div class="kcp-pi__hook" data-hook-idx="3">{{ section.settings.hook_4 }}</div>
+    <div class="kcp-pi__hook" data-hook-idx="4">{{ section.settings.hook_5 }}</div>
+    <div class="kcp-pi__hook" data-hook-idx="5">{{ section.settings.hook_6 }}</div>
+    <div class="kcp-pi__hook" data-hook-idx="6">{{ section.settings.hook_7 }}</div>
+    <div class="kcp-pi__hook" data-hook-idx="7">{{ section.settings.hook_8 }}</div>
+  </div>
+
+  <div class="kcp-pi__proof-pills">
+    <span class="kcp-pi__proof kcp-pi__proof--green">🏠 <span id="kcSoldCount-{{ section.id }}">{{ sold_count }}</span>+ families love this</span>
+    <span class="kcp-pi__proof kcp-pi__proof--amber">🔥 <span id="kcSold24-{{ section.id }}">{{ sold_24hrs }}</span> sold in last 24hrs</span>
+  </div>
+
+  <div class="kcp-pi__stars">
+    {%- assign score_f = review_score | times: 1.0 -%}
+    {%- assign score_int = score_f | floor -%}
+    {%- for i in (1..5) -%}
+      {%- if i <= score_int -%}
+        <span class="kcp-pi__star kcp-pi__star--full">★</span>
+      {%- else -%}
+        <span class="kcp-pi__star kcp-pi__star--empty">★</span>
+      {%- endif -%}
+    {%- endfor -%}
+    <span class="kcp-pi__score">{{ review_score }}</span>
+    <a href="#kcp-reviews" class="kcp-pi__review-count">({{ review_count }} reviews)</a>
+  </div>
+
+  <div class="kcp-pi__price-card">
+    <div class="kcp-pi__price-row">
+      <span class="kcp-pi__price">{{ cv.price | money }}</span>
+      {%- if has_compare -%}
+        <span class="kcp-pi__mrp">{{ cv.compare_at_price | money }}</span>
+        <span class="kcp-pi__save">Save {{ save_pct }}%</span>
+      {%- endif -%}
+    </div>
+    {%- if cv.price >= 90000 -%}
+      <p class="kcp-pi__emi">or 3 × ₹{{ emi_amount }}/mo · no-cost EMI</p>
+    {%- endif -%}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kcp-product-info {
+    padding: 20px 16px 0;
+    font-family: 'Nunito', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__badge--age {
+    background-color: #F0EDFF;
+    color: #6B5FD4;
+    border: 1.5px solid #DDD8FF;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__badge--bs {
+    background-color: #FFF8E0;
+    color: #2C2A3A;
+    border: 1.5px solid #E8C14A;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__title {
+    font-weight: 900;
+    font-size: 20px;
+    color: #2C2A3A;
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__hook-wrap {
+    position: relative;
+    height: 52px;
+    margin-bottom: 14px;
+    background-color: #F0EDFF;
+    border-left: 4px solid #6B5FD4;
+    border-radius: 0 10px 10px 0;
+    padding: 8px 14px;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__hook {
+    position: absolute;
+    inset: 0;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-style: italic;
+    color: #2C2A3A;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    display: flex;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__hook--active { opacity: 1; }
+  #shopify-section-{{ section.id }} .kcp-pi__proof-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__proof {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__proof--green {
+    background-color: #E8F4F0;
+    color: #4A7C6F;
+    border: 1.5px solid #4A7C6F;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__proof--amber {
+    background-color: #FFF8E0;
+    color: #9B6F00;
+    border: 1.5px solid #E8C14A;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__stars {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__star { font-size: 16px; }
+  #shopify-section-{{ section.id }} .kcp-pi__star--full { color: #E8C14A; }
+  #shopify-section-{{ section.id }} .kcp-pi__star--empty { color: #EDE8E0; }
+  #shopify-section-{{ section.id }} .kcp-pi__score {
+    font-weight: 800;
+    font-size: 14px;
+    color: #2C2A3A;
+    margin-left: 2px;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__review-count {
+    font-size: 13px;
+    color: #6B5FD4;
+    text-decoration: underline;
+    margin-left: 2px;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__price-card {
+    background-color: #F0EDFF;
+    border: 1.5px solid #DDD8FF;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__price-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__price {
+    font-weight: 900;
+    font-size: 28px;
+    color: #2C2A3A;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__mrp {
+    font-size: 16px;
+    color: #7A7890;
+    text-decoration: line-through;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__save {
+    background-color: #4A7C6F;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+  #shopify-section-{{ section.id }} .kcp-pi__emi {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #7A7890;
+    font-weight: 700;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kcp-product-info { padding: 0 0 0 32px; }
+    #shopify-section-{{ section.id }} .kcp-pi__title { font-size: 22px; }
+    #shopify-section-{{ section.id }} .kcp-pi__price { font-size: 32px; }
+    #shopify-section-{{ section.id }} .kcp-pi__hook-wrap { height: 48px; }
+    #shopify-section-{{ section.id }} .kcp-pi__hook { font-size: 14px; }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} .kcp-pi__title { font-size: 28px; }
+    #shopify-section-{{ section.id }} .kcp-pi__price { font-size: 36px; }
+    #shopify-section-{{ section.id }} .kcp-pi__hook { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kcp-pi__hook-wrap { height: 52px; }
+    #shopify-section-{{ section.id }} .kcp-pi__score { font-size: 15px; }
+  }
+</style>
+
+<script>
+(function() {
+  var sectionId = '{{ section.id }}';
+  var hookWrap = document.getElementById('kcHook-' + sectionId);
+  if (!hookWrap) return;
+  var hooks = hookWrap.querySelectorAll('.kcp-pi__hook');
+  if (!hooks.length) return;
+  var idx = 0;
+  setInterval(function() {
+    hooks[idx].classList.remove('kcp-pi__hook--active');
+    idx = (idx + 1) % hooks.length;
+    hooks[idx].classList.add('kcp-pi__hook--active');
+  }, 3500);
+
+  // Proof pill variation (every 30min simulate slight random change)
+  var soldEl = document.getElementById('kcSoldCount-' + sectionId);
+  var sold24El = document.getElementById('kcSold24-' + sectionId);
+  if (soldEl && sold24El) {
+    setInterval(function() {
+      var base = parseInt(soldEl.textContent) || {{ sold_count | default: 847 }};
+      soldEl.textContent = base + Math.floor(Math.random() * 3);
+      var base24 = parseInt(sold24El.textContent) || {{ sold_24hrs | default: 12 }};
+      sold24El.textContent = base24 + Math.floor(Math.random() * 2);
+    }, 1800000);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Info",
+  "settings": [
+    {
+      "type": "text",
+      "id": "hook_1",
+      "label": "Review hook 1",
+      "default": "\"My daughter hasn't put it down in weeks!\" — Priya, Mumbai"
+    },
+    {
+      "type": "text",
+      "id": "hook_2",
+      "label": "Review hook 2",
+      "default": "\"Best toy we've bought this year.\" — Ankit, Bangalore"
+    },
+    {
+      "type": "text",
+      "id": "hook_3",
+      "label": "Review hook 3",
+      "default": "\"Keeps my toddler engaged for hours.\" — Deepa, Delhi"
+    },
+    {
+      "type": "text",
+      "id": "hook_4",
+      "label": "Review hook 4",
+      "default": "\"Great quality, totally safe.\" — Rahul, Pune"
+    },
+    {
+      "type": "text",
+      "id": "hook_5",
+      "label": "Review hook 5",
+      "default": "\"Arrived beautifully packaged — perfect gift!\" — Sneha, Chennai"
+    },
+    {
+      "type": "text",
+      "id": "hook_6",
+      "label": "Review hook 6",
+      "default": "\"My son loves learning through play.\" — Vikram, Hyderabad"
+    },
+    {
+      "type": "text",
+      "id": "hook_7",
+      "label": "Review hook 7",
+      "default": "\"Worth every rupee — highly recommend.\" — Meera, Jaipur"
+    },
+    {
+      "type": "text",
+      "id": "hook_8",
+      "label": "Review hook 8",
+      "default": "\"Finally a toy that's both fun and educational.\" — Arjun, Kolkata"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Info"
+    }
+  ]
+}
+{% endschema %}

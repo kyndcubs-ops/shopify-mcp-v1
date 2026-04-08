@@ -1,0 +1,145 @@
+<div id="shopify-section-{{ section.id }}" class="kc-shop-by-age">
+  <div class="kc-shop-by-age__inner">
+    <h2 class="kc-shop-by-age__heading">{{ section.settings.heading }}</h2>
+    <div class="kc-shop-by-age__grid">
+      {%- for block in section.blocks -%}
+        <a href="{{ block.settings.link }}" class="kc-sba-card" style="background-color: {{ block.settings.bg_color }};" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="kc-sba-card__img">
+              <img src="{{ block.settings.image | image_url: width: 320 }}" alt="{{ block.settings.title }}" width="320" height="240" loading="lazy">
+            </div>
+          {%- endif -%}
+          <div class="kc-sba-card__body">
+            <span class="kc-sba-card__title">{{ block.settings.title }}</span>
+            {%- if block.settings.subtitle != blank -%}
+              <span class="kc-sba-card__subtitle">{{ block.settings.subtitle }}</span>
+            {%- endif -%}
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-shop-by-age {
+    padding: 32px 16px;
+    background-color: #FBF8F4;
+  }
+  #shopify-section-{{ section.id }} .kc-shop-by-age__inner { max-width: 1200px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .kc-shop-by-age__heading {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 24px;
+    color: #2C2A3A;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  #shopify-section-{{ section.id }} .kc-shop-by-age__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  #shopify-section-{{ section.id }} .kc-sba-card {
+    border-radius: 16px;
+    border: 1.5px solid #EDE8E0;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #shopify-section-{{ section.id }} .kc-sba-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(107,95,212,0.12);
+  }
+  #shopify-section-{{ section.id }} .kc-sba-card__img { overflow: hidden; }
+  #shopify-section-{{ section.id }} .kc-sba-card__img img { width: 100%; height: auto; display: block; }
+  #shopify-section-{{ section.id }} .kc-sba-card__body {
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  #shopify-section-{{ section.id }} .kc-sba-card__title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 16px;
+    color: #2C2A3A;
+  }
+  #shopify-section-{{ section.id }} .kc-sba-card__subtitle {
+    font-size: 13px;
+    color: #7A7890;
+    font-weight: 400;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-shop-by-age { padding: 48px 40px; }
+    #shopify-section-{{ section.id }} .kc-shop-by-age__heading { font-size: 32px; margin-bottom: 32px; }
+    #shopify-section-{{ section.id }} .kc-shop-by-age__grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    #shopify-section-{{ section.id }} .kc-sba-card__title { font-size: 18px; }
+    #shopify-section-{{ section.id }} .kc-sba-card__subtitle { font-size: 14px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Shop By Age",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Shop by age"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "age_card",
+      "name": "Age Card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Age label",
+          "default": "1–2 years"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "Sensory & stacking"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Collection link"
+        },
+        {
+          "type": "color",
+          "id": "bg_color",
+          "label": "Card background color",
+          "default": "#F0EDFF"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Card image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop By Age",
+      "blocks": [
+        { "type": "age_card", "settings": { "title": "1–2 years", "subtitle": "Sensory & stacking", "bg_color": "#F0EDFF" } },
+        { "type": "age_card", "settings": { "title": "2–4 years", "subtitle": "Pretend play", "bg_color": "#E8F4F0" } },
+        { "type": "age_card", "settings": { "title": "4–6 years", "subtitle": "Creative & STEM", "bg_color": "#FFF0F3" } },
+        { "type": "age_card", "settings": { "title": "6–8 years", "subtitle": "Strategy & games", "bg_color": "#FFF8E0" } },
+        { "type": "age_card", "settings": { "title": "Travel toys", "subtitle": "On-the-go fun", "bg_color": "#F0EBE3" } },
+        { "type": "age_card", "settings": { "title": "Gifting", "subtitle": "Beautifully packed", "bg_color": "#E8F4F0" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

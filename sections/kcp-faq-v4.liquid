@@ -1,0 +1,188 @@
+{%- liquid
+  assign wa_num = section.settings.wa_number
+  assign wa_msg = 'Hi! I have a question about ' | append: product.title | url_encode
+  assign wa_link = 'https://wa.me/' | append: wa_num | append: '?text=' | append: wa_msg
+-%}
+<div id="shopify-section-{{ section.id }}" class="kcp-faq">
+  <h2 class="kcp-faq__heading">{{ section.settings.heading }}</h2>
+  <div class="kcp-faq__list">
+    {%- for block in section.blocks -%}
+      <div class="kcp-faq__item{% if forloop.first %} kcp-faq__item--open{% endif %}" {{ block.shopify_attributes }}>
+        <button class="kcp-faq__question" type="button" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+          <span>{{ block.settings.question }}</span>
+          <span class="kcp-faq__icon">{% if forloop.first %}−{% else %}+{% endif %}</span>
+        </button>
+        <div class="kcp-faq__answer" {% unless forloop.first %}hidden{% endunless %}>
+          <div class="kcp-faq__answer-inner">{{ block.settings.answer }}</div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+  <div class="kcp-faq__wa">
+    <p class="kcp-faq__wa-text">{{ section.settings.wa_text }}</p>
+    <a href="{{ wa_link }}" target="_blank" rel="noopener" class="kc-btn-wa kcp-faq__wa-btn">💬 Chat on WhatsApp</a>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kcp-faq {
+    padding: 28px 16px;
+    font-family: 'Nunito', sans-serif;
+    background-color: #FBF8F4;
+  }
+  #shopify-section-{{ section.id }} .kcp-faq__heading {
+    font-weight: 900;
+    font-size: 22px;
+    color: #2C2A3A;
+    margin-bottom: 18px;
+  }
+  #shopify-section-{{ section.id }} .kcp-faq__list { display: flex; flex-direction: column; gap: 0; }
+  #shopify-section-{{ section.id }} .kcp-faq__item {
+    border-bottom: 1.5px solid #EDE8E0;
+  }
+  #shopify-section-{{ section.id }} .kcp-faq__question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 14px 4px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: #2C2A3A;
+    cursor: pointer;
+    text-align: left;
+    gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .kcp-faq__icon {
+    font-size: 20px;
+    font-weight: 400;
+    color: #6B5FD4;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .kcp-faq__answer { overflow: hidden; }
+  #shopify-section-{{ section.id }} .kcp-faq__answer[hidden] { display: none; }
+  #shopify-section-{{ section.id }} .kcp-faq__answer-inner {
+    padding: 4px 4px 14px;
+    font-size: 14px;
+    color: #7A7890;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  #shopify-section-{{ section.id }} .kcp-faq__wa {
+    margin-top: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .kcp-faq__wa-text {
+    font-size: 14px;
+    color: #7A7890;
+    font-weight: 700;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kcp-faq { padding: 32px 0; }
+    #shopify-section-{{ section.id }} .kcp-faq__question { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kcp-faq__answer-inner { font-size: 15px; }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} .kcp-faq__question { font-size: 16px; }
+    #shopify-section-{{ section.id }} .kcp-faq__answer-inner { font-size: 16px; }
+  }
+</style>
+
+<script>
+(function() {
+  var section = document.getElementById('shopify-section-{{ section.id }}');
+  if (!section) return;
+  var items = section.querySelectorAll('.kcp-faq__item');
+  items.forEach(function(item) {
+    var btn = item.querySelector('.kcp-faq__question');
+    var answer = item.querySelector('.kcp-faq__answer');
+    var icon = item.querySelector('.kcp-faq__icon');
+    if (!btn || !answer) return;
+    btn.addEventListener('click', function() {
+      var isOpen = item.classList.contains('kcp-faq__item--open');
+      // Close all
+      items.forEach(function(i) {
+        i.classList.remove('kcp-faq__item--open');
+        var a = i.querySelector('.kcp-faq__answer');
+        var ic = i.querySelector('.kcp-faq__icon');
+        if (a) a.setAttribute('hidden', '');
+        if (ic) ic.textContent = '+';
+        var b = i.querySelector('.kcp-faq__question');
+        if (b) b.setAttribute('aria-expanded', 'false');
+      });
+      if (!isOpen) {
+        item.classList.add('kcp-faq__item--open');
+        answer.removeAttribute('hidden');
+        if (icon) icon.textContent = '−';
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product FAQ",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "text",
+      "id": "wa_text",
+      "label": "WhatsApp prompt text",
+      "default": "Still have questions? We're here to help."
+    },
+    {
+      "type": "text",
+      "id": "wa_number",
+      "label": "WhatsApp number",
+      "default": "917509802310"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Are these toys safe?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Yes — every toy on KyndCubs is tested to EN71 and BIS standards. We check for toxic materials, sharp edges, and small parts before listing any product.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product FAQ",
+      "blocks": [
+        { "type": "faq_item", "settings": { "question": "Are these toys safe?", "answer": "<p>Yes — every toy on KyndCubs is tested to EN71 and BIS standards. We check for toxic materials, sharp edges, and small parts before listing any product.</p>" } },
+        { "type": "faq_item", "settings": { "question": "Will my child actually play with this?", "answer": "<p>We only list toys that have passed our engagement test with real families. If it doesn't hold a child's attention for more than a week, it doesn't make our list.</p>" } },
+        { "type": "faq_item", "settings": { "question": "What's your return policy?", "answer": "<p>We offer hassle-free 7-day returns. Just reach out via WhatsApp or email and we'll sort it out — no questions asked.</p>" } },
+        { "type": "faq_item", "settings": { "question": "How long does delivery take?", "answer": "<p>Most orders are delivered within 2–3 business days across India. Express delivery is available in select cities.</p>" } },
+        { "type": "faq_item", "settings": { "question": "Can I send this as a gift?", "answer": "<p>Absolutely! All orders ship in beautiful, gift-ready packaging. You can add a personalised message at checkout.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
