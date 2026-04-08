@@ -1,0 +1,199 @@
+{%- liquid
+  assign review_score = product.metafields.custom.review_score | default: '4.8'
+  assign review_count = product.metafields.custom.review_count | default: '142'
+  assign pct5 = section.settings.pct_5
+  assign pct4 = section.settings.pct_4
+  assign pct3 = section.settings.pct_3
+  assign pct2 = section.settings.pct_2
+  assign pct1 = section.settings.pct_1
+-%}
+<div id="shopify-section-{{ section.id }}" class="kcp-reviews">
+  <div class="kcp-rv__header">
+    <div class="kcp-rv__score-block">
+      <span class="kcp-rv__big-score">{{ review_score }}</span>
+      <div class="kcp-rv__stars">
+        {%- assign score_int = review_score | floor -%}
+        {%- for i in (1..5) -%}
+          {%- if i <= score_int -%}
+            <span class="kcp-rv__star kcp-rv__star--full">★</span>
+          {%- else -%}
+            <span class="kcp-rv__star kcp-rv__star--empty">★</span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <span class="kcp-rv__count">{{ review_count }} reviews</span>
+    </div>
+    <div class="kcp-rv__bars">
+      {%- assign bar_stars = '5,4,3,2,1' | split: ',' -%}
+      {%- for star in bar_stars -%}
+        {%- assign bar_idx = forloop.index0 -%}
+        {%- if bar_idx == 0 -%}{%- assign pct_val = pct5 -%}
+        {%- elsif bar_idx == 1 -%}{%- assign pct_val = pct4 -%}
+        {%- elsif bar_idx == 2 -%}{%- assign pct_val = pct3 -%}
+        {%- elsif bar_idx == 3 -%}{%- assign pct_val = pct2 -%}
+        {%- else -%}{%- assign pct_val = pct1 -%}
+        {%- endif -%}
+        <div class="kcp-rv__bar-row">
+          <span class="kcp-rv__bar-label">{{ star }}★</span>
+          <div class="kcp-rv__bar-track">
+            <div class="kcp-rv__bar-fill" data-pct="{{ pct_val }}" style="width:0%"></div>
+          </div>
+          <span class="kcp-rv__bar-pct">{{ pct_val }}%</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <div class="kcp-rv__widget" id="kcpJudgemeWidget-{{ section.id }}">
+    {%- render 'judgeme_widgets', widget_type: 'judgeme_review_widget', concierge_install: true, product: product -%}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kcp-reviews {
+    padding: 28px 16px;
+    font-family: 'Nunito', sans-serif;
+    background-color: #FBF8F4;
+  }
+  #shopify-section-{{ section.id }} .kcp-rv__header {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    margin-bottom: 24px;
+  }
+  #shopify-section-{{ section.id }} .kcp-rv__score-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  #shopify-section-{{ section.id }} .kcp-rv__big-score {
+    font-weight: 900;
+    font-size: 56px;
+    color: #2C2A3A;
+    line-height: 1;
+  }
+  #shopify-section-{{ section.id }} .kcp-rv__stars { display: flex; gap: 4px; }
+  #shopify-section-{{ section.id }} .kcp-rv__star { font-size: 22px; }
+  #shopify-section-{{ section.id }} .kcp-rv__star--full { color: #E8C14A; }
+  #shopify-section-{{ section.id }} .kcp-rv__star--empty { color: #EDE8E0; }
+  #shopify-section-{{ section.id }} .kcp-rv__count { font-size: 14px; color: #7A7890; font-weight: 700; }
+  #shopify-section-{{ section.id }} .kcp-rv__bars { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  #shopify-section-{{ section.id }} .kcp-rv__bar-row { display: flex; align-items: center; gap: 8px; }
+  #shopify-section-{{ section.id }} .kcp-rv__bar-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2C2A3A;
+    width: 24px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  #shopify-section-{{ section.id }} .kcp-rv__bar-track {
+    flex: 1;
+    height: 10px;
+    background-color: #EDE8E0;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .kcp-rv__bar-fill {
+    height: 100%;
+    background-color: #E8C14A;
+    border-radius: 99px;
+    transition: width 0.6s ease;
+  }
+  #shopify-section-{{ section.id }} .kcp-rv__bar-pct {
+    font-size: 12px;
+    color: #7A7890;
+    width: 30px;
+    flex-shrink: 0;
+    text-align: right;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kcp-reviews { padding: 32px 0; }
+    #shopify-section-{{ section.id }} .kcp-rv__header { flex-direction: row; align-items: flex-start; }
+    #shopify-section-{{ section.id }} .kcp-rv__score-block { flex: 0 0 140px; }
+    #shopify-section-{{ section.id }} .kcp-rv__big-score { font-size: 64px; }
+  }
+</style>
+
+<script>
+(function() {
+  var section = document.getElementById('shopify-section-{{ section.id }}');
+  if (!section) return;
+  var bars = section.querySelectorAll('.kcp-rv__bar-fill');
+  function animateBars() {
+    bars.forEach(function(bar) {
+      var pct = bar.getAttribute('data-pct');
+      bar.style.width = pct + '%';
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) { animateBars(); obs.disconnect(); }
+      });
+    }, { threshold: 0.2 });
+    obs.observe(section);
+  } else {
+    animateBars();
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Reviews",
+  "settings": [
+    {
+      "type": "range",
+      "id": "pct_5",
+      "label": "5-star %",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 75
+    },
+    {
+      "type": "range",
+      "id": "pct_4",
+      "label": "4-star %",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "pct_3",
+      "label": "3-star %",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "pct_2",
+      "label": "2-star %",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "pct_1",
+      "label": "1-star %",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 5
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Reviews"
+    }
+  ]
+}
+{% endschema %}

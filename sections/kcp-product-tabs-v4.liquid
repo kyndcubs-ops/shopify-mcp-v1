@@ -1,0 +1,193 @@
+{%- liquid
+  assign why_raw = product.metafields.custom.why_we_chose_this
+  assign material = product.metafields.custom.material
+  assign dimensions = product.metafields.custom.dimensions
+  assign safety_standards = product.metafields.custom.safety_standards
+  assign safety_info = product.metafields.custom.safety_info
+  assign care = product.metafields.custom.care_instructions
+  assign whats_in_box = product.metafields.custom.whats_in_box
+  assign age_range = product.metafields.custom.age_range
+-%}
+<div id="shopify-section-{{ section.id }}" class="kcp-tabs">
+  <div class="kcp-tabs__nav">
+    <button class="kcp-tabs__tab kcp-tabs__tab--active" data-tab="why" type="button">{{ section.settings.tab1_label }}</button>
+    <button class="kcp-tabs__tab" data-tab="details" type="button">{{ section.settings.tab2_label }}</button>
+  </div>
+
+  <div class="kcp-tabs__panel kcp-tabs__panel--active" data-panel="why">
+    <ul class="kcp-tabs__bullets">
+      {%- if why_raw != blank -%}
+        {%- assign why_lines = why_raw | newline_to_br | split: '<br />' -%}
+        {%- for line in why_lines -%}
+          {%- assign clean = line | strip | remove: '•' | strip -%}
+          {%- if clean != blank -%}
+            <li class="kcp-tabs__bullet">✦ {{ clean }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        <li class="kcp-tabs__bullet">✦ {{ section.settings.bullet_1 }}</li>
+        <li class="kcp-tabs__bullet">✦ {{ section.settings.bullet_2 }}</li>
+        <li class="kcp-tabs__bullet">✦ {{ section.settings.bullet_3 }}</li>
+        <li class="kcp-tabs__bullet">✦ {{ section.settings.bullet_4 }}</li>
+      {%- endif -%}
+    </ul>
+  </div>
+
+  <div class="kcp-tabs__panel" data-panel="details">
+    <dl class="kcp-tabs__dl">
+      <dt>Brand</dt><dd>Kynd Cubs</dd>
+      {%- if age_range != blank -%}<dt>Age range</dt><dd>{{ age_range }}</dd>{%- endif -%}
+      {%- if material != blank -%}<dt>Material</dt><dd>{{ material }}</dd>{%- endif -%}
+      {%- if dimensions != blank -%}<dt>Dimensions</dt><dd>{{ dimensions }}</dd>{%- endif -%}
+      {%- if safety_standards != blank -%}
+        <dt>Safety standards</dt><dd>{{ safety_standards }}</dd>
+      {%- else -%}
+        <dt>Safety standards</dt><dd>EN71 certified</dd>
+      {%- endif -%}
+      {%- if safety_info != blank -%}<dt>Safety info</dt><dd>{{ safety_info }}</dd>{%- endif -%}
+      {%- if care != blank -%}<dt>Care instructions</dt><dd>{{ care }}</dd>{%- endif -%}
+      {%- if whats_in_box != blank -%}<dt>What's in the box</dt><dd>{{ whats_in_box }}</dd>{%- endif -%}
+    </dl>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kcp-tabs {
+    padding: 16px;
+    font-family: 'Nunito', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kcp-tabs__nav {
+    display: flex;
+    border-bottom: 2px solid #EDE8E0;
+    margin-bottom: 16px;
+    gap: 0;
+  }
+  #shopify-section-{{ section.id }} .kcp-tabs__tab {
+    flex: 1;
+    padding: 10px 8px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    color: #7A7890;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  #shopify-section-{{ section.id }} .kcp-tabs__tab--active {
+    color: #6B5FD4;
+    border-bottom-color: #6B5FD4;
+  }
+  #shopify-section-{{ section.id }} .kcp-tabs__panel { display: none; }
+  #shopify-section-{{ section.id }} .kcp-tabs__panel--active { display: block; }
+  #shopify-section-{{ section.id }} .kcp-tabs__bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .kcp-tabs__bullet {
+    font-size: 14px;
+    color: #2C2A3A;
+    font-weight: 700;
+    line-height: 1.5;
+    padding-left: 4px;
+  }
+  #shopify-section-{{ section.id }} .kcp-tabs__dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 8px 16px;
+  }
+  #shopify-section-{{ section.id }} .kcp-tabs__dl dt {
+    font-weight: 800;
+    font-size: 13px;
+    color: #7A7890;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .kcp-tabs__dl dd {
+    font-size: 13px;
+    color: #2C2A3A;
+    font-weight: 400;
+    margin: 0;
+    line-height: 1.5;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kcp-tabs { padding: 16px 0; }
+    #shopify-section-{{ section.id }} .kcp-tabs__tab { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kcp-tabs__bullet { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kcp-tabs__dl dt { font-size: 14px; }
+    #shopify-section-{{ section.id }} .kcp-tabs__dl dd { font-size: 14px; }
+  }
+</style>
+
+<script>
+(function() {
+  var section = document.getElementById('shopify-section-{{ section.id }}');
+  if (!section) return;
+  var tabs = section.querySelectorAll('.kcp-tabs__tab');
+  var panels = section.querySelectorAll('.kcp-tabs__panel');
+  tabs.forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      var target = tab.getAttribute('data-tab');
+      tabs.forEach(function(t) { t.classList.remove('kcp-tabs__tab--active'); });
+      panels.forEach(function(p) { p.classList.remove('kcp-tabs__panel--active'); });
+      tab.classList.add('kcp-tabs__tab--active');
+      var panel = section.querySelector('.kcp-tabs__panel[data-panel="' + target + '"]');
+      if (panel) panel.classList.add('kcp-tabs__panel--active');
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Tabs",
+  "settings": [
+    {
+      "type": "text",
+      "id": "tab1_label",
+      "label": "Tab 1 label",
+      "default": "Why we chose this"
+    },
+    {
+      "type": "text",
+      "id": "tab2_label",
+      "label": "Tab 2 label",
+      "default": "Product details"
+    },
+    {
+      "type": "text",
+      "id": "bullet_1",
+      "label": "Fallback bullet 1",
+      "default": "Thoughtfully designed for child development"
+    },
+    {
+      "type": "text",
+      "id": "bullet_2",
+      "label": "Fallback bullet 2",
+      "default": "Tested with 50+ Indian families"
+    },
+    {
+      "type": "text",
+      "id": "bullet_3",
+      "label": "Fallback bullet 3",
+      "default": "Non-toxic, BPA-free materials"
+    },
+    {
+      "type": "text",
+      "id": "bullet_4",
+      "label": "Fallback bullet 4",
+      "default": "Keeps children engaged for hours"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Tabs"
+    }
+  ]
+}
+{% endschema %}
