@@ -1,0 +1,347 @@
+{%- liquid
+  assign cv = product.selected_or_first_available_variant
+  assign urgency_text = product.metafields.custom.urgency_text | default: section.settings.urgency_text
+  assign usp1 = product.metafields.custom.usp_1 | default: section.settings.usp_1
+  assign usp2 = product.metafields.custom.usp_2 | default: section.settings.usp_2
+  assign usp3 = product.metafields.custom.usp_3 | default: section.settings.usp_3
+  assign usp4 = product.metafields.custom.usp_4 | default: section.settings.usp_4
+  assign free_threshold = section.settings.free_shipping_threshold
+-%}
+<div id="shopify-section-{{ section.id }}" class="kcp-action-zone">
+  <div class="kcp-az__usps">
+    {%- if usp1 != blank -%}<span class="kcp-az__usp">{{ usp1 }}</span>{%- endif -%}
+    {%- if usp2 != blank -%}<span class="kcp-az__usp">{{ usp2 }}</span>{%- endif -%}
+    {%- if usp3 != blank -%}<span class="kcp-az__usp">{{ usp3 }}</span>{%- endif -%}
+    {%- if usp4 != blank -%}<span class="kcp-az__usp">{{ usp4 }}</span>{%- endif -%}
+  </div>
+
+  {%- if urgency_text != blank -%}
+    <div class="kcp-az__urgency">
+      <span class="kcp-az__urgency-dot"></span>
+      <span class="kcp-az__urgency-text">{{ urgency_text }}</span>
+    </div>
+  {%- endif -%}
+
+  <form id="kcpAZForm-{{ section.id }}" class="kcp-az__form">
+    {%- if product.variants.size > 1 -%}
+      <div class="kcp-az__variants">
+        <label class="kcp-az__variant-label">{{ product.options.first }}:</label>
+        <div class="kcp-az__variant-pills">
+          {%- for variant in product.variants -%}
+            <button type="button"
+              class="kcp-az__variant-pill{% if variant.id == cv.id %} kcp-az__variant-pill--selected{% endif %}{% unless variant.available %} kcp-az__variant-pill--sold-out{% endunless %}"
+              data-variant-id="{{ variant.id }}"
+              data-price="{{ variant.price }}"
+              data-compare="{{ variant.compare_at_price }}"
+              data-available="{{ variant.available }}">
+              {{ variant.title }}
+            </button>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="kcp-az__qty-atc">
+      <div class="kcp-az__qty">
+        <button type="button" class="kcp-az__qty-btn kcp-az__qty-minus" aria-label="Decrease quantity">−</button>
+        <span class="kcp-az__qty-val" id="kcpQty-{{ section.id }}">1</span>
+        <button type="button" class="kcp-az__qty-btn kcp-az__qty-plus" aria-label="Increase quantity">+</button>
+      </div>
+      <button type="button" class="kc-btn-primary kcp-az__atc-btn" id="kcpATC-{{ section.id }}" data-variant-id="{{ cv.id }}">Add to cart</button>
+    </div>
+
+    <button type="button" class="kc-btn-dark kcp-az__buy-now" id="kcpBuyNow-{{ section.id }}" data-variant-id="{{ cv.id }}">Buy Now</button>
+  </form>
+
+  <div class="kcp-az__shipping">
+    <div class="kcp-az__ship-item">
+      <span class="kcp-az__ship-icon">🚚</span>
+      <span class="kcp-az__ship-text">Free above ₹{{ free_threshold }}</span>
+    </div>
+    <div class="kcp-az__ship-item">
+      <span class="kcp-az__ship-icon">⏱️</span>
+      <span class="kcp-az__ship-text">2–3 day delivery</span>
+    </div>
+    <div class="kcp-az__ship-item">
+      <span class="kcp-az__ship-icon">💵</span>
+      <span class="kcp-az__ship-text">COD available</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kcp-action-zone {
+    padding: 0 16px 20px;
+    font-family: 'Nunito', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__usps {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__usp {
+    background-color: #F0EDFF;
+    color: #2C2A3A;
+    border: 1.5px solid #DDD8FF;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__urgency {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #FFF0F3;
+    border: 1.5px solid #D4687A;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__urgency-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #D4687A;
+    flex-shrink: 0;
+    animation: kcBlink 1s infinite;
+  }
+  @keyframes kcBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+  #shopify-section-{{ section.id }} .kcp-az__urgency-text {
+    font-size: 13px;
+    font-weight: 800;
+    color: #D4687A;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__variants { margin-bottom: 14px; }
+  #shopify-section-{{ section.id }} .kcp-az__variant-label {
+    font-size: 13px;
+    font-weight: 800;
+    color: #2C2A3A;
+    margin-bottom: 8px;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__variant-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  #shopify-section-{{ section.id }} .kcp-az__variant-pill {
+    padding: 6px 16px;
+    border-radius: 99px;
+    border: 2px solid #EDE8E0;
+    background-color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2C2A3A;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__variant-pill--selected {
+    border-color: #6B5FD4;
+    background-color: #F0EDFF;
+    color: #6B5FD4;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__variant-pill--sold-out {
+    opacity: 0.45;
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__qty-atc {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__qty {
+    display: flex;
+    align-items: center;
+    border: 2px solid #EDE8E0;
+    border-radius: 99px;
+    overflow: hidden;
+    height: 52px;
+    flex-shrink: 0;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__qty-btn {
+    width: 44px;
+    height: 100%;
+    background: none;
+    border: none;
+    font-size: 20px;
+    font-weight: 700;
+    color: #2C2A3A;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Nunito', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__qty-btn:hover { background-color: #F0EDFF; }
+  #shopify-section-{{ section.id }} .kcp-az__qty-val {
+    min-width: 36px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 16px;
+    color: #2C2A3A;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__atc-btn { flex: 1; }
+  #shopify-section-{{ section.id }} .kcp-az__buy-now { width: 100%; }
+  #shopify-section-{{ section.id }} .kcp-az__shipping {
+    display: flex;
+    gap: 0;
+    background-color: #E8F4F0;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 14px;
+    justify-content: space-around;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__ship-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .kcp-az__ship-icon { font-size: 20px; }
+  #shopify-section-{{ section.id }} .kcp-az__ship-text { font-size: 11px; font-weight: 700; color: #4A7C6F; }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kcp-action-zone { padding: 0 0 0 32px; }
+    #shopify-section-{{ section.id }} .kcp-az__usp { font-size: 13px; }
+    #shopify-section-{{ section.id }} .kcp-az__ship-text { font-size: 12px; }
+  }
+</style>
+
+<script>
+(function() {
+  var sectionId = '{{ section.id }}';
+  var qtyEl = document.getElementById('kcpQty-' + sectionId);
+  var atcBtn = document.getElementById('kcpATC-' + sectionId);
+  var buyNowBtn = document.getElementById('kcpBuyNow-' + sectionId);
+  var section = document.getElementById('shopify-section-' + sectionId);
+  if (!section) return;
+
+  var qty = 1;
+  var selectedVariantId = atcBtn ? atcBtn.getAttribute('data-variant-id') : null;
+
+  // Qty stepper
+  section.addEventListener('click', function(e) {
+    if (e.target.closest('.kcp-az__qty-minus')) {
+      if (qty > 1) { qty--; if (qtyEl) qtyEl.textContent = qty; }
+    }
+    if (e.target.closest('.kcp-az__qty-plus')) {
+      qty++;
+      if (qtyEl) qtyEl.textContent = qty;
+    }
+  });
+
+  // Variant selection
+  var variantPills = section.querySelectorAll('.kcp-az__variant-pill');
+  variantPills.forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      if (pill.getAttribute('data-available') === 'false') return;
+      variantPills.forEach(function(p) { p.classList.remove('kcp-az__variant-pill--selected'); });
+      pill.classList.add('kcp-az__variant-pill--selected');
+      selectedVariantId = pill.getAttribute('data-variant-id');
+      if (atcBtn) atcBtn.setAttribute('data-variant-id', selectedVariantId);
+      if (buyNowBtn) buyNowBtn.setAttribute('data-variant-id', selectedVariantId);
+    });
+  });
+
+  function addToCart(variantId, quantity, redirect) {
+    return fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify({ id: variantId, quantity: quantity })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() {
+      return fetch('/cart.js');
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(cart) {
+      document.querySelectorAll('.cart-count-bubble').forEach(function(el) {
+        el.removeAttribute('hidden');
+        var span = el.querySelector('span[aria-hidden]') || el.querySelector('span');
+        if (span) span.textContent = cart.item_count;
+      });
+      if (redirect) { window.location.href = '/checkout'; }
+    });
+  }
+
+  if (atcBtn) {
+    atcBtn.addEventListener('click', function() {
+      var vid = atcBtn.getAttribute('data-variant-id');
+      if (!vid) return;
+      atcBtn.disabled = true;
+      atcBtn.textContent = 'Adding…';
+      addToCart(vid, qty, false)
+        .then(function() {
+          atcBtn.textContent = '✓ Added!';
+          setTimeout(function() { atcBtn.textContent = 'Add to cart'; atcBtn.disabled = false; }, 2000);
+        })
+        .catch(function() { atcBtn.textContent = 'Add to cart'; atcBtn.disabled = false; });
+    });
+  }
+
+  if (buyNowBtn) {
+    buyNowBtn.addEventListener('click', function() {
+      var vid = buyNowBtn.getAttribute('data-variant-id');
+      if (!vid) return;
+      buyNowBtn.disabled = true;
+      buyNowBtn.textContent = 'Redirecting…';
+      addToCart(vid, qty, true)
+        .catch(function() { buyNowBtn.textContent = 'Buy Now'; buyNowBtn.disabled = false; });
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Action Zone",
+  "settings": [
+    {
+      "type": "text",
+      "id": "usp_1",
+      "label": "USP 1",
+      "default": "✅ Safety tested"
+    },
+    {
+      "type": "text",
+      "id": "usp_2",
+      "label": "USP 2",
+      "default": "🚚 Fast delivery"
+    },
+    {
+      "type": "text",
+      "id": "usp_3",
+      "label": "USP 3",
+      "default": "🌿 Non-toxic & BPA free"
+    },
+    {
+      "type": "text",
+      "id": "usp_4",
+      "label": "USP 4",
+      "default": "🎁 Gift-ready packaging"
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Urgency text",
+      "default": "Only 8 left in stock — order today!"
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_threshold",
+      "label": "Free shipping threshold (₹)",
+      "default": 499
+    }
+  ],
+  "presets": [
+    {
+      "name": "Action Zone"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,101 @@
+{%- liquid
+  assign offer_discount = product.metafields.custom.offer_discount | default: section.settings.fallback_discount
+  assign offer_gift = product.metafields.custom.offer_gift | default: section.settings.fallback_gift
+  assign offer_combo = product.metafields.custom.offer_combo | default: section.settings.fallback_combo
+  assign has_any = false
+  if offer_discount != blank or offer_gift != blank or offer_combo != blank
+    assign has_any = true
+  endif
+-%}
+{%- if has_any -%}
+<div id="shopify-section-{{ section.id }}" class="kcp-offers">
+  <h3 class="kcp-offers__title">🎉 Offers &amp; combos</h3>
+  <div class="kcp-offers__list">
+    {%- if offer_discount != blank -%}
+      <div class="kcp-offers__item">
+        <span class="kcp-offers__badge kcp-offers__badge--discount">DISCOUNT</span>
+        <span class="kcp-offers__text">{{ offer_discount }}</span>
+      </div>
+    {%- endif -%}
+    {%- if offer_gift != blank -%}
+      <div class="kcp-offers__item">
+        <span class="kcp-offers__badge kcp-offers__badge--gift">FREE GIFT</span>
+        <span class="kcp-offers__text">{{ offer_gift }}</span>
+      </div>
+    {%- endif -%}
+    {%- if offer_combo != blank -%}
+      <div class="kcp-offers__item">
+        <span class="kcp-offers__badge kcp-offers__badge--combo">COMBO</span>
+        <span class="kcp-offers__text">{{ offer_combo }}</span>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{%- endif -%}
+
+<style>
+  #shopify-section-{{ section.id }} .kcp-offers {
+    margin: 0 16px 16px;
+    background-color: #FFF8E0;
+    border: 1.5px solid #E8C14A;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-family: 'Nunito', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kcp-offers__title {
+    font-weight: 800;
+    font-size: 14px;
+    color: #2C2A3A;
+    margin-bottom: 10px;
+  }
+  #shopify-section-{{ section.id }} .kcp-offers__list { display: flex; flex-direction: column; gap: 8px; }
+  #shopify-section-{{ section.id }} .kcp-offers__item { display: flex; align-items: flex-start; gap: 10px; }
+  #shopify-section-{{ section.id }} .kcp-offers__badge {
+    flex-shrink: 0;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+  #shopify-section-{{ section.id }} .kcp-offers__badge--discount { background-color: #D4687A; color: #FFFFFF; }
+  #shopify-section-{{ section.id }} .kcp-offers__badge--gift { background-color: #4A7C6F; color: #FFFFFF; }
+  #shopify-section-{{ section.id }} .kcp-offers__badge--combo { background-color: #6B5FD4; color: #FFFFFF; }
+  #shopify-section-{{ section.id }} .kcp-offers__text { font-size: 13px; color: #2C2A3A; font-weight: 700; line-height: 1.4; }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kcp-offers { margin: 0 0 16px; }
+    #shopify-section-{{ section.id }} .kcp-offers__text { font-size: 14px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Product Offers",
+  "settings": [
+    {
+      "type": "text",
+      "id": "fallback_discount",
+      "label": "Fallback discount offer",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "fallback_gift",
+      "label": "Fallback free gift offer",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "fallback_combo",
+      "label": "Fallback combo offer",
+      "default": ""
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Offers"
+    }
+  ]
+}
+{% endschema %}
