@@ -1,0 +1,99 @@
+{%- liquid
+  assign cv = product.selected_or_first_available_variant
+-%}
+<div id="shopify-section-{{ section.id }}" class="kcp-sticky-atc" aria-label="Quick add to cart">
+  <div class="kcp-satc__info">
+    <span class="kcp-satc__title">{{ product.title | truncate: 40 }}</span>
+    <span class="kcp-satc__price">{{ cv.price | money }}</span>
+  </div>
+  <button type="button" class="kc-btn-primary kcp-satc__btn" id="kcpSATC-{{ section.id }}" data-variant-id="{{ cv.id }}">Add to cart</button>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kcp-sticky-atc {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #FFFFFF;
+    border-top: 2px solid #EDE8E0;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    z-index: 900;
+    font-family: 'Nunito', sans-serif;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+  }
+  #shopify-section-{{ section.id }} .kcp-satc__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+  #shopify-section-{{ section.id }} .kcp-satc__title {
+    font-weight: 700;
+    font-size: 13px;
+    color: #2C2A3A;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #shopify-section-{{ section.id }} .kcp-satc__price {
+    font-weight: 900;
+    font-size: 15px;
+    color: #2C2A3A;
+  }
+  #shopify-section-{{ section.id }} .kcp-satc__btn {
+    flex-shrink: 0;
+    height: 44px;
+    font-size: 14px;
+    padding: 0 20px;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kcp-sticky-atc { display: none; }
+  }
+</style>
+
+<script>
+(function() {
+  var btn = document.getElementById('kcpSATC-{{ section.id }}');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var variantId = btn.getAttribute('data-variant-id');
+    if (!variantId) return;
+    btn.disabled = true;
+    btn.textContent = 'Adding…';
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function() { return fetch('/cart.js'); })
+    .then(function(r) { return r.json(); })
+    .then(function(cart) {
+      document.querySelectorAll('.cart-count-bubble').forEach(function(el) {
+        el.removeAttribute('hidden');
+        var span = el.querySelector('span[aria-hidden]') || el.querySelector('span');
+        if (span) span.textContent = cart.item_count;
+      });
+      window.location.href = '/cart';
+    })
+    .catch(function() { btn.textContent = 'Add to cart'; btn.disabled = false; });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Sticky ATC Bar",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Sticky ATC Bar"
+    }
+  ]
+}
+{% endschema %}

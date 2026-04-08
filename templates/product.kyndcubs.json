@@ -1,0 +1,66 @@
+{
+  "sections": {
+    "gallery": {
+      "type": "kcp-gallery-v4",
+      "settings": {}
+    },
+    "product-info": {
+      "type": "kcp-product-info-v4",
+      "settings": {}
+    },
+    "action-zone": {
+      "type": "kcp-action-zone-v4",
+      "settings": {}
+    },
+    "offers": {
+      "type": "kcp-offers-v4",
+      "settings": {}
+    },
+    "video-grid": {
+      "type": "kcp-video-grid-v4",
+      "settings": {}
+    },
+    "product-tabs": {
+      "type": "kcp-product-tabs-v4",
+      "settings": {}
+    },
+    "why-parents": {
+      "type": "kcp-why-parents-v4",
+      "settings": {}
+    },
+    "reviews": {
+      "type": "kcp-reviews-v4",
+      "settings": {}
+    },
+    "faq": {
+      "type": "kcp-faq-v4",
+      "settings": {}
+    },
+    "policy-grid": {
+      "type": "kcp-policy-grid-v4",
+      "settings": {}
+    },
+    "sticky-atc": {
+      "type": "kcp-sticky-atc-v4",
+      "settings": {}
+    },
+    "floating-wa": {
+      "type": "kcp-floating-wa-v4",
+      "settings": {}
+    }
+  },
+  "order": [
+    "gallery",
+    "product-info",
+    "action-zone",
+    "offers",
+    "video-grid",
+    "product-tabs",
+    "why-parents",
+    "reviews",
+    "faq",
+    "policy-grid",
+    "sticky-atc",
+    "floating-wa"
+  ]
+}
