@@ -1,0 +1,122 @@
+<div id="shopify-section-{{ section.id }}" class="kc-email-signup">
+  <div class="kc-email-signup__inner">
+    <h2 class="kc-email-signup__heading">{{ section.settings.heading }}</h2>
+    <p class="kc-email-signup__subheading">{{ section.settings.subheading }}</p>
+    <form class="kc-email-signup__form" action="/contact#contact_form" method="post" accept-charset="UTF-8">
+      <input type="hidden" name="form_type" value="customer">
+      <input type="hidden" name="utf8" value="✓">
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="kc-email-signup__row">
+        <input
+          type="email"
+          name="contact[email]"
+          class="kc-email-signup__input"
+          placeholder="{{ section.settings.placeholder }}"
+          required
+          autocomplete="email"
+          aria-label="Email address">
+        <button type="submit" class="kc-btn-primary kc-email-signup__btn">{{ section.settings.button_text }}</button>
+      </div>
+    </form>
+    <p class="kc-email-signup__privacy">{{ section.settings.privacy_note }}</p>
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-email-signup {
+    background-color: #2C2A3A;
+    padding: 48px 16px;
+    text-align: center;
+  }
+  #shopify-section-{{ section.id }} .kc-email-signup__inner { max-width: 560px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .kc-email-signup__heading {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 26px;
+    color: #E8C14A;
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+  #shopify-section-{{ section.id }} .kc-email-signup__subheading {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    color: #EDE8E0;
+    margin-bottom: 24px;
+    font-weight: 400;
+  }
+  #shopify-section-{{ section.id }} .kc-email-signup__row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  #shopify-section-{{ section.id }} .kc-email-signup__input {
+    width: 100%;
+    height: 52px;
+    padding: 0 20px;
+    border-radius: 99px;
+    border: 2px solid #EDE8E0;
+    background-color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: #2C2A3A;
+    outline: none;
+  }
+  #shopify-section-{{ section.id }} .kc-email-signup__input:focus { border-color: #6B5FD4; }
+  #shopify-section-{{ section.id }} .kc-email-signup__btn { width: 100%; }
+  #shopify-section-{{ section.id }} .kc-email-signup__privacy {
+    font-size: 12px;
+    color: #7A7890;
+    font-family: 'Nunito', sans-serif;
+  }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-email-signup { padding: 60px 40px; }
+    #shopify-section-{{ section.id }} .kc-email-signup__heading { font-size: 34px; }
+    #shopify-section-{{ section.id }} .kc-email-signup__row { flex-direction: row; }
+    #shopify-section-{{ section.id }} .kc-email-signup__input { flex: 1; }
+    #shopify-section-{{ section.id }} .kc-email-signup__btn { width: auto; flex-shrink: 0; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Email Signup",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get ₹100 off your first order"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Join 2,000+ parents getting curated toy recommendations."
+    },
+    {
+      "type": "text",
+      "id": "placeholder",
+      "label": "Input placeholder",
+      "default": "Enter your email address"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Claim ₹100 off"
+    },
+    {
+      "type": "text",
+      "id": "privacy_note",
+      "label": "Privacy note",
+      "default": "No spam. Unsubscribe anytime."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Email Signup"
+    }
+  ]
+}
+{% endschema %}

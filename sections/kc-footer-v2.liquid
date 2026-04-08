@@ -1,0 +1,285 @@
+{%- liquid
+  assign current_year = 'now' | date: '%Y'
+-%}
+<footer id="shopify-section-{{ section.id }}" class="kc-footer">
+  <div class="kc-footer__inner">
+    <div class="kc-footer__top">
+      <div class="kc-footer__brand">
+        {%- if section.settings.logo != blank -%}
+          <img src="{{ section.settings.logo | image_url: width: 160 }}" alt="{{ shop.name | escape }}" width="160" height="52" loading="lazy" class="kc-footer__logo">
+        {%- else -%}
+          <span class="kc-footer__logo-text">{{ shop.name }}</span>
+        {%- endif -%}
+        {%- if section.settings.tagline != blank -%}
+          <p class="kc-footer__tagline">{{ section.settings.tagline }}</p>
+        {%- endif -%}
+        {%- if section.settings.social_instagram != blank or section.settings.social_facebook != blank or section.settings.social_youtube != blank -%}
+          <div class="kc-footer__social">
+            {%- if section.settings.social_instagram != blank -%}
+              <a href="{{ section.settings.social_instagram }}" target="_blank" rel="noopener" aria-label="Instagram" class="kc-footer__social-link">📷</a>
+            {%- endif -%}
+            {%- if section.settings.social_facebook != blank -%}
+              <a href="{{ section.settings.social_facebook }}" target="_blank" rel="noopener" aria-label="Facebook" class="kc-footer__social-link">👍</a>
+            {%- endif -%}
+            {%- if section.settings.social_youtube != blank -%}
+              <a href="{{ section.settings.social_youtube }}" target="_blank" rel="noopener" aria-label="YouTube" class="kc-footer__social-link">▶️</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      </div>
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'link_list' -%}
+          <div class="kc-footer__col" {{ block.shopify_attributes }}>
+            <h3 class="kc-footer__col-title">{{ block.settings.title }}</h3>
+            {%- if block.settings.menu != blank -%}
+              {%- assign menu = linklists[block.settings.menu] -%}
+              {%- if menu != blank -%}
+                <ul class="kc-footer__links">
+                  {%- for link in menu.links -%}
+                    <li><a href="{{ link.url }}" class="kc-footer__link">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      <div class="kc-footer__contact">
+        <h3 class="kc-footer__col-title">Contact</h3>
+        {%- if section.settings.contact_email != blank -%}
+          <a href="mailto:{{ section.settings.contact_email }}" class="kc-footer__link">{{ section.settings.contact_email }}</a>
+        {%- endif -%}
+        {%- if section.settings.wa_number != blank -%}
+          <a href="https://wa.me/{{ section.settings.wa_number }}" target="_blank" rel="noopener" class="kc-footer__link kc-footer__wa-link">💬 WhatsApp us</a>
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="kc-footer__payments">
+      <span class="kc-footer__payment-label">We accept:</span>
+      <span class="kc-footer__payment-icon">UPI</span>
+      <span class="kc-footer__payment-icon">RuPay</span>
+      <span class="kc-footer__payment-icon">Visa</span>
+      <span class="kc-footer__payment-icon">Mastercard</span>
+      <span class="kc-footer__payment-icon">COD</span>
+    </div>
+    <div class="kc-footer__bottom">
+      <p class="kc-footer__copy">© {{ current_year }} {{ shop.name }}. All rights reserved.</p>
+      <div class="kc-footer__legal">
+        {%- if section.settings.privacy_url != blank -%}
+          <a href="{{ section.settings.privacy_url }}" class="kc-footer__legal-link">Privacy Policy</a>
+        {%- endif -%}
+        {%- if section.settings.terms_url != blank -%}
+          <a href="{{ section.settings.terms_url }}" class="kc-footer__legal-link">Terms of Service</a>
+        {%- endif -%}
+        {%- if section.settings.refund_url != blank -%}
+          <a href="{{ section.settings.refund_url }}" class="kc-footer__legal-link">Refund Policy</a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  #shopify-section-{{ section.id }} .kc-footer {
+    background-color: #2C2A3A;
+    color: #EDE8E0;
+    padding: 40px 16px 24px;
+    font-family: 'Nunito', sans-serif;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__inner { max-width: 1200px; margin: 0 auto; }
+  #shopify-section-{{ section.id }} .kc-footer__top {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-bottom: 32px;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__logo { display: block; max-width: 140px; height: auto; }
+  #shopify-section-{{ section.id }} .kc-footer__logo-text {
+    font-weight: 900;
+    font-size: 22px;
+    color: #FFFFFF;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__tagline {
+    font-size: 13px;
+    color: #7A7890;
+    margin-top: 8px;
+    max-width: 220px;
+    line-height: 1.5;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__social {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__social-link {
+    font-size: 22px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__social-link:hover { opacity: 0.7; }
+  #shopify-section-{{ section.id }} .kc-footer__col-title {
+    font-weight: 800;
+    font-size: 14px;
+    color: #FFFFFF;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__link {
+    color: #7A7890;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+    display: block;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__link:hover { color: #FFFFFF; }
+  #shopify-section-{{ section.id }} .kc-footer__contact { display: flex; flex-direction: column; gap: 8px; }
+  #shopify-section-{{ section.id }} .kc-footer__wa-link { color: #25D366; }
+  #shopify-section-{{ section.id }} .kc-footer__payments {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 20px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__payment-label {
+    font-size: 12px;
+    color: #7A7890;
+    margin-right: 4px;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__payment-icon {
+    background-color: rgba(255,255,255,0.1);
+    color: #FFFFFF;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  #shopify-section-{{ section.id }} .kc-footer__bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__copy { font-size: 13px; color: #7A7890; }
+  #shopify-section-{{ section.id }} .kc-footer__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__legal-link {
+    font-size: 12px;
+    color: #7A7890;
+    text-decoration: none;
+  }
+  #shopify-section-{{ section.id }} .kc-footer__legal-link:hover { color: #FFFFFF; }
+  @media (min-width: 768px) {
+    #shopify-section-{{ section.id }} .kc-footer { padding: 56px 40px 32px; }
+    #shopify-section-{{ section.id }} .kc-footer__top {
+      flex-direction: row;
+      gap: 40px;
+      align-items: flex-start;
+    }
+    #shopify-section-{{ section.id }} .kc-footer__brand { flex: 0 0 220px; }
+    #shopify-section-{{ section.id }} .kc-footer__bottom { flex-direction: row; justify-content: space-between; align-items: center; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Toys that spark real curiosity."
+    },
+    {
+      "type": "text",
+      "id": "social_instagram",
+      "label": "Instagram URL",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "social_facebook",
+      "label": "Facebook URL",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "social_youtube",
+      "label": "YouTube URL",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "default": "hello@kyndcubs.com"
+    },
+    {
+      "type": "text",
+      "id": "wa_number",
+      "label": "WhatsApp number",
+      "default": "917509802310"
+    },
+    {
+      "type": "url",
+      "id": "privacy_url",
+      "label": "Privacy Policy URL"
+    },
+    {
+      "type": "url",
+      "id": "terms_url",
+      "label": "Terms of Service URL"
+    },
+    {
+      "type": "url",
+      "id": "refund_url",
+      "label": "Refund Policy URL"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Footer Link List",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Column title",
+          "default": "Shop"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer"
+    }
+  ]
+}
+{% endschema %}
