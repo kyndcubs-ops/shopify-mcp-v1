@@ -230,6 +230,54 @@ When adding the integration in Claude.ai, paste your `BEARER_TOKEN` value into t
 | `shopify_get_shop` | Get store info (name, currency, plan, etc.) |
 | `shopify_list_webhooks` | List configured webhooks |
 | `shopify_create_webhook` | Create a new webhook |
+| `shopify_generate_website` | Generate a complete CRO-optimised theme from a store idea |
+| `shopify_list_themes` | List all themes on the store |
+| `shopify_apply_theme` | Push generated theme files to a Shopify theme |
+| `shopify_get_theme_asset` | Read a single file from a Shopify theme |
+
+---
+
+## Website generation
+
+The `shopify_generate_website` tool lets you create a complete, conversion-rate-optimised Shopify website from just a store idea and basic information.
+
+### What it generates
+
+- **Homepage** — hero banner with CTAs, best-sellers carousel, brand story, UGC gallery, trust badges, email capture
+- **Product page** — gallery, rotating review hooks, urgency badges, social-proof pills, variant selector, sticky add-to-cart, FAQ, policies
+- **All standard pages** — 404, blog, article, collection, cart, search, password
+- **Theme settings** — colour palette auto-selected by niche (kids, fashion, beauty, food, electronics, health, home, pets)
+- **Header / footer** — rotating announcement bar, full footer with links
+
+### CRO features included
+
+- Rotating announcement bar (free shipping + social proof)
+- Hero with primary & secondary CTA + proof strip
+- Best-sellers with zero-reload quick add-to-cart
+- Urgency badges and sold-count social proof on product pages
+- EMI breakdown for high-ticket items
+- Sticky add-to-cart bar
+- Floating WhatsApp button
+- FAQ accordion (reduces purchase hesitation)
+- Policy grid (shipping, returns, warranty)
+- Email capture with first-order discount incentive
+
+### Example usage with Claude
+
+```
+"Generate a Shopify website for a kids toy store called Kynd Cubs, 
+ targeting Indian parents, INR currency, free shipping above ₹499"
+```
+
+The tool returns a JSON blueprint with every theme file. Then use `shopify_apply_theme` to push the files to your live Shopify theme.
+
+### Workflow
+
+1. Call `shopify_generate_website` with your store idea and info
+2. Review the generated theme configuration
+3. Call `shopify_list_themes` to find your active theme ID
+4. Call `shopify_apply_theme` with the theme ID and generated files
+5. Customise images in the Shopify Theme Editor
 
 ---
 
