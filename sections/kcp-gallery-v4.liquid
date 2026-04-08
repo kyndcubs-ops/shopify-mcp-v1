@@ -132,12 +132,14 @@
   @media (min-width: 768px) {
     #shopify-section-{{ section.id }} .kcp-gallery {
       position: sticky;
-      top: 20px;
-      width: 480px;
-      flex-shrink: 0;
+      top: var(--kc-header-height, 80px);
+      width: 100%;
     }
     #shopify-section-{{ section.id }} .kcp-gallery__dots { display: none; }
     #shopify-section-{{ section.id }} .kcp-gallery__thumb { width: 72px; height: 72px; }
+  }
+  @media (min-width: 1024px) {
+    #shopify-section-{{ section.id }} .kcp-gallery__thumb { width: 80px; height: 80px; }
   }
 </style>
 

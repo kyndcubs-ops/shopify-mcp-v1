@@ -106,6 +106,10 @@
     #shopify-section-{{ section.id }} .kcp-vg__card-city { font-size: 12px; }
     #shopify-section-{{ section.id }} .kcp-vg__card-quote { font-size: 13px; }
   }
+  @media (min-width: 900px) {
+    #shopify-section-{{ section.id }} .kcp-vg__grid { grid-template-columns: repeat(4, 1fr); }
+    #shopify-section-{{ section.id }} .kcp-vg__heading { font-size: 30px; }
+  }
 </style>
 
 {% schema %}

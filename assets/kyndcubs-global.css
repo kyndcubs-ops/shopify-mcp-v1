@@ -19,6 +19,7 @@
   --kc-mint-bg: #E8F4F0;
   --kc-white: #FFFFFF;
   --kc-border: #EDE8E0;
+  --kc-header-height: 80px; /* update if your theme header height differs */
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -83,6 +84,8 @@ body {
 
 .kc-section-padding { padding: 24px 16px; }
 @media (min-width: 768px) { .kc-section-padding { padding: 48px 40px; } }
+@media (min-width: 1024px) { .kc-section-padding { padding: 64px 60px; } }
+@media (min-width: 1280px) { .kc-section-padding { padding: 72px 80px; } }
 
 /* Text colour utilities */
 .kc-text-primary { color: var(--kc-primary); }
@@ -103,3 +106,94 @@ body {
 .kc-bg-white { background-color: var(--kc-white); }
 .kc-bg-coral-light { background-color: var(--kc-coral-light); }
 .kc-bg-sage-light { background-color: var(--kc-sage-light); }
+
+/* =============================================================
+   DESKTOP OPTIMISATION (≥ 900 px)
+   ============================================================= */
+
+/* ── Product page: two-column layout ─────────────────────────
+   Gallery floats left; Product Info / Action Zone / Offers
+   float right; everything below clears both floats.
+   Section IDs come from templates/product.kyndcubs.json keys.
+   ------------------------------------------------------------ */
+@media (min-width: 900px) {
+  /* Left column – sticky gallery */
+  #shopify-section-gallery {
+    float: left;
+    width: 46%;
+    padding: 32px 16px 32px 40px;
+    box-sizing: border-box;
+  }
+
+  /* Right column – product info stack */
+  #shopify-section-product-info {
+    float: right;
+    width: 54%;
+    padding: 32px 40px 0 0;
+    box-sizing: border-box;
+  }
+  #shopify-section-action-zone,
+  #shopify-section-offers {
+    float: right;
+    width: 54%;
+    padding: 0 40px 0 0;
+    box-sizing: border-box;
+  }
+
+  /* Clear floats: everything below is full-width */
+  #shopify-section-video-grid,
+  #shopify-section-product-tabs,
+  #shopify-section-why-parents,
+  #shopify-section-reviews,
+  #shopify-section-faq,
+  #shopify-section-policy-grid,
+  #shopify-section-sticky-atc,
+  #shopify-section-floating-wa { clear: both; }
+
+  /* Override the gallery inner fixed 480 px width */
+  #shopify-section-gallery .kcp-gallery {
+    width: 100% !important;
+    position: sticky;
+    top: var(--kc-header-height, 80px);
+    flex-shrink: unset;
+  }
+
+  /* Full-width section inner containers: centred with max-width */
+  #shopify-section-video-grid .kcp-video-grid,
+  #shopify-section-product-tabs .kcp-tabs,
+  #shopify-section-why-parents .kcp-why-parents,
+  #shopify-section-reviews .kcp-reviews,
+  #shopify-section-faq .kcp-faq,
+  #shopify-section-policy-grid .kcp-policy-grid {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-sizing: border-box;
+  }
+}
+
+/* ── Large-screen edge padding (1280 px +) ───────────────────
+   Keeps the two-column product area from stretching past 1280 px
+   ------------------------------------------------------------ */
+@media (min-width: 1280px) {
+  #shopify-section-gallery {
+    width: 44%;
+    padding-left: max(40px, calc((100vw - 1280px) / 2 + 40px));
+  }
+  #shopify-section-product-info,
+  #shopify-section-action-zone,
+  #shopify-section-offers {
+    width: 56%;
+    padding-right: max(40px, calc((100vw - 1280px) / 2 + 40px));
+  }
+}
+
+/* ── Homepage / shared sections: max-width ────────────────── */
+@media (min-width: 1024px) {
+  .kc-best-sellers__inner,
+  .kc-shop-by-age__inner,
+  .kc-ugc__inner,
+  .kc-footer__inner { max-width: 1280px; }
+}

@@ -52,7 +52,12 @@
     padding: 0 20px;
   }
   @media (min-width: 768px) {
-    #shopify-section-{{ section.id }} .kcp-sticky-atc { display: none; }
+    #shopify-section-{{ section.id }} .kcp-sticky-atc {
+      padding: 10px max(40px, calc((100vw - 1280px) / 2 + 40px));
+    }
+    #shopify-section-{{ section.id }} .kcp-satc__title { font-size: 15px; }
+    #shopify-section-{{ section.id }} .kcp-satc__price { font-size: 18px; }
+    #shopify-section-{{ section.id }} .kcp-satc__btn { height: 48px; font-size: 15px; padding: 0 28px; }
   }
 </style>
 
