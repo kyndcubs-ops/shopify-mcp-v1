@@ -1,0 +1,11 @@
+{
+  "current": {
+    "color_primary": "#6B5FD4",
+    "color_primary_bg": "#F0EDFF",
+    "color_page_bg": "#FBF8F4",
+    "color_ink": "#2C2A3A",
+    "type_header_font": "nunito_n4",
+    "type_body_font": "nunito_n4"
+  },
+  "presets": {}
+}

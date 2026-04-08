@@ -1,0 +1,55 @@
+{
+  "sections": {
+    "announcement-bar": {
+      "type": "kc-announcement-bar-v2",
+      "settings": {
+        "message_1": "🚚 Free delivery above ₹499 · Pan-India",
+        "message_2": "⭐ Trusted by 10,000+ Indian parents",
+        "message_3": "🎁 Curated for ages 1–8"
+      }
+    },
+    "hero": {
+      "type": "kc-hero-v2",
+      "settings": {}
+    },
+    "age-nav": {
+      "type": "kc-age-nav-v2",
+      "settings": {}
+    },
+    "best-sellers": {
+      "type": "kc-best-sellers-v2",
+      "settings": {}
+    },
+    "shop-by-age": {
+      "type": "kc-shop-by-age-v2",
+      "settings": {}
+    },
+    "brand-story": {
+      "type": "kc-brand-story-v2",
+      "settings": {}
+    },
+    "ugc-gallery": {
+      "type": "kc-ugc-gallery-v2",
+      "settings": {}
+    },
+    "trust-strip": {
+      "type": "kc-trust-strip-v2",
+      "settings": {}
+    },
+    "email-signup": {
+      "type": "kc-email-signup-v2",
+      "settings": {}
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "hero",
+    "age-nav",
+    "best-sellers",
+    "shop-by-age",
+    "brand-story",
+    "ugc-gallery",
+    "trust-strip",
+    "email-signup"
+  ]
+}
