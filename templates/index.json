@@ -80,13 +80,13 @@
   },
   "order": [
     "announcement-bar",
-    "hero",
     "age-nav",
-    "best-sellers",
+    "hero",
+    "trust-strip",
     "shop-by-age",
+    "best-sellers",
     "brand-story",
     "ugc-gallery",
-    "trust-strip",
     "email-signup"
   ]
 }
